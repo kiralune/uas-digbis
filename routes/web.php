@@ -17,6 +17,7 @@ Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
 Route::group(['prefix' => 'admin', 'as' => 'admin.'], function () {
     // Catatan: Dashboard & Login Auth di kemudian hari akan menempati blok ini juga
     Route::resource('events', EventAdminController::class);
+    Route::resource('partners', \App\Http\Controllers\PartnerController::class);
 
     Route::get('/', [DashboardController::class,'index'])->name('dashboard');
     Route::get('/transactions', [DashboardController::class,'indexTransaction'])->name('transactions.index');

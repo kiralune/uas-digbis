@@ -68,6 +68,6 @@ class DatabaseSeeder extends Seeder
             'poster_path' => 'posters/event-3.png',
         ]);
 
-        
+        $this->call(PartnerSeeder::class);
     }
 }
