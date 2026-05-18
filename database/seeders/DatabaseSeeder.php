@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         ]);
             
         // 2. Insert Kategori Event
-            $category = \App\Models\Category::create([
+        $category = \App\Models\Category::create([
             'name' => 'Seminar IT',
             'slug' => 'seminar-it',
         ]);
@@ -32,6 +32,22 @@ class DatabaseSeeder extends Seeder
         $category2 = \App\Models\Category::firstOrCreate([
             'name' => 'Entertaiment',
             'slug' => 'entertaiment',
+        ]);
+
+        // Buat kategori tambahan
+        \App\Models\Category::firstOrCreate([
+            'name' => 'Workshop',
+            'slug' => 'workshop',
+        ]);
+
+        \App\Models\Category::firstOrCreate([
+            'name' => 'Olahraga',
+            'slug' => 'olahraga',
+        ]);
+
+        \App\Models\Category::firstOrCreate([
+            'name' => 'Bisnis',
+            'slug' => 'bisnis',
         ]);
             
         // 3. Insert Sampel Events
@@ -67,6 +83,9 @@ class DatabaseSeeder extends Seeder
             'stock' => 100,
             'poster_path' => 'posters/event-3.png',
         ]);
+
+        // 4. Call EventSeeder untuk buat event per kategori
+        $this->call(EventSeeder::class);
 
         $this->call(PartnerSeeder::class);
     }

@@ -100,5 +100,64 @@
         @endforeach
     </section>
 
+    <!-- Partners Section -->
+    <section class="max-w-7xl mx-auto px-6 py-20 bg-gradient-to-b from-slate-50 to-white rounded-3xl">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">
+                Dipercaya oleh <span class="text-indigo-600">Partner Terkemuka</span>
+            </h2>
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto">
+                AmikomEventHub berkolaborasi dengan berbagai perusahaan dan organisasi terkemuka untuk memberikan pengalaman event terbaik.
+            </p>
+        </div>
+
+        @if($partners->count() > 0)
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 items-center justify-items-center">
+            @foreach($partners as $partner)
+            <div class="group p-6 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-lg bg-white transition-all duration-300 flex items-center justify-center h-40 w-full">
+                <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" 
+                    class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
+                    title="{{ $partner->name }}">
+            </div>
+            @endforeach
+        </div>
+        @else
+        <div class="text-center py-12 bg-slate-100 rounded-2xl">
+            <p class="text-slate-500">Belum ada partner yang terdaftar.</p>
+        </div>
+        @endif
+    </section>
+
+    <!-- Kategori Section -->
+    <section class="max-w-7xl mx-auto px-6 py-20">
+        <div class="text-center mb-16">
+            <h2 class="text-4xl md:text-5xl font-black mb-4">
+                Jenis-Jenis <span class="text-indigo-600">Event</span>
+            </h2>
+            <p class="text-lg text-slate-500 max-w-2xl mx-auto">
+                Kami menyediakan berbagai kategori event untuk memenuhi semua kebutuhan Anda.
+            </p>
+        </div>
+
+        @if($categories->count() > 0)
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            @foreach($categories as $category)
+            <a href="/?category={{ $category->slug }}" 
+                class="group p-8 rounded-2xl border-2 border-slate-200 hover:border-indigo-600 bg-white hover:bg-indigo-50 transition-all duration-300 text-center">
+                <div class="text-4xl mb-4 opacity-60 group-hover:opacity-100 transition">📁</div>
+                <h3 class="text-xl font-bold text-slate-800 mb-2 group-hover:text-indigo-600 transition">{{ $category->name }}</h3>
+                <p class="text-sm text-slate-500">Jelajahi berbagai event di kategori ini</p>
+                <div class="mt-4 inline-block px-4 py-2 bg-indigo-100 text-indigo-600 rounded-lg text-sm font-bold opacity-0 group-hover:opacity-100 transition">
+                    Lihat Event →
+                </div>
+            </a>
+            @endforeach
+        </div>
+        @else
+        <div class="text-center py-12 bg-slate-100 rounded-2xl">
+            <p class="text-slate-500">Belum ada kategori yang tersedia.</p>
+        </div>
+        @endif
+    </section>
 
 @endsection

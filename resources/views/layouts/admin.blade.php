@@ -49,6 +49,12 @@
                 </svg>
                 Kelola Partner
             </a>
+            <a href="{{ route('admin.categories.index') }}" class="flex items-center gap-3 px-4 py-3 {{ request()->routeIs('admin.categories.*') ? 'bg-indigo-800 text-white' : 'hover:bg-indigo-800' }} rounded-xl font-bold transition">
+                <svg class="w-5 h-5 {{ request()->routeIs('admin.categories.*') ? 'text-indigo-300' : 'text-indigo-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 01.586 1.414v5c0 .512-.195 1.024-.586 1.414l-7 7a2 2 0 01-1.414.586h-5c-.512 0-1.024-.195-1.414-.586l-7-7A2 2 0 013 12.828V7.828a2 2 0 01.586-1.414l7-7C6.024 3.195 6.512 3 7 3z"></path>
+                </svg>
+                Kelola Kategori
+            </a>
         </nav>
 
         <div class="pt-6 border-t border-indigo-800">

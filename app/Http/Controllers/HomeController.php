@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Category;
+use App\Models\Partners;
 use Illuminate\Http\Request;
 
 class HomeController extends Controller
@@ -11,6 +12,7 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $categories = Category::all();
+        $partners = Partners::all();
 
         // 2. Buat kueri dasar untuk mengambil event: 
         // - Gunakan Eager loading `category`
@@ -30,7 +32,7 @@ class HomeController extends Controller
         // 4. Eksekusi query dan kirim data hasilnya ke template Blade
         $events = $query->get();
 
-        return view('welcome', compact('events', 'categories'));
+        return view('welcome', compact('events', 'categories', 'partners'));
     }
 }
 
