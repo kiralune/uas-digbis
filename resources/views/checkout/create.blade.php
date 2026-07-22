@@ -20,6 +20,18 @@
      @endif
 
      <div class="grid grid-cols-1 gap-8">
+         @guest
+         <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
+             <h3 class="text-xl font-bold mb-6 border-b pb-4">Masuk Cepat dengan Google</h3>
+             <p class="text-slate-500 mb-6">Gunakan akun Google untuk mempercepat data pemesanan dan kembali ke checkout secara otomatis.</p>
+             <a href="{{ route('auth.google', ['redirect_to' => route('checkout.create', $event->id)]) }}"
+                 class="inline-flex items-center justify-center gap-3 w-full rounded-2xl border border-slate-200 py-4 text-slate-900 font-semibold hover:bg-slate-50 transition">
+                 <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5">
+                 Masuk dengan Google
+             </a>
+         </div>
+         @endguest
+
          <!-- Summary Card -->
          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
              <h3 class="text-xl font-bold mb-6 border-b pb-4">Pesanan Anda</h3>

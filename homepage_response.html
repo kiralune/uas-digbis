@@ -22,8 +22,7 @@
 
 <body class="bg-slate-50 text-slate-900">
 
-    @unless(View::hasSection('hideNav'))
-        <!-- Navigation -->
+            <!-- Navigation -->
         <nav
             class="glass sticky top-8 z-40 mx-4 mt-4 px-6 py-4 rounded-2xl border border-white/20 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
@@ -31,28 +30,17 @@
                 <span class="text-xl font-bold tracking-tight">amikomeventhub</span>
             </div>
             <div class="hidden md:flex items-center gap-8 font-medium">
-                <a href="{{ route('home') }}" class="text-indigo-600">Jelajahi</a>
+                <a href="http://127.0.0.1:8000" class="text-indigo-600">Jelajahi</a>
                 <a href="#" class="hover:text-indigo-600 transition">Kategori</a>
                 <a href="#" class="hover:text-indigo-600 transition">Tentang Kami</a>
             </div>
             <div class="flex items-center gap-3">
-                @guest
-                    <a href="{{ route('login') }}" class="px-5 py-2.5 rounded-xl font-semibold hover:bg-slate-200 transition">Login</a>
-                    <a href="{{ route('register') }}"
+                                    <a href="http://127.0.0.1:8000/login" class="px-5 py-2.5 rounded-xl font-semibold hover:bg-slate-200 transition">Login</a>
+                    <a href="http://127.0.0.1:8000/register"
                        class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Daftar</a>
-                @else
-                    <span class="text-sm text-slate-600">Halo, {{ auth()->user()->name }}</span>
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-900 font-semibold hover:bg-slate-200 transition">Logout</button>
-                    </form>
-                @endguest
-            </div>
+                            </div>
         </nav>
-    @endunless
-
-    @yield('content')
-
+    
     <!-- Footer -->
     <footer class="bg-indigo-900 text-indigo-100 py-20 px-6 mt-20">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -70,16 +58,27 @@
                 <h4 class="text-white font-bold mb-6">Kategori</h4>
                 <ul class="space-y-4">
                     <li><a href="/" class="hover:text-white transition">Semua Kategori</a></li>
-                    @isset($categories)
-                        @foreach($categories as $cat)
-                            <li>
-                                <a href="/?category={{ $cat->slug }}" class="hover:text-white transition">
-                                    {{ $cat->name }}
+                                                                        <li>
+                                <a href="/?category=seminar-it" class="hover:text-white transition">
+                                    Seminar IT
                                 </a>
                             </li>
-                        @endforeach
-                    @endisset
-                </ul>
+                                                    <li>
+                                <a href="/?category=entertaiment" class="hover:text-white transition">
+                                    Entertaiment
+                                </a>
+                            </li>
+                                                    <li>
+                                <a href="/?category=workshop" class="hover:text-white transition">
+                                    Workshop
+                                </a>
+                            </li>
+                                                    <li>
+                                <a href="/?category=olahraga" class="hover:text-white transition">
+                                    Olahraga
+                                </a>
+                            </li>
+                                                            </ul>
             </div>
             <div>
                 <h4 class="text-white font-bold mb-4">Navigasi</h4>

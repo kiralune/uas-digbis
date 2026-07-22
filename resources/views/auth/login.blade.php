@@ -32,7 +32,26 @@
                 <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Password</label>
                 <input type="password" name="password" class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium" required>
             </div>
-            <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Masuk</button>
+            <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">
+    Masuk
+</button>
+
+<div class="relative my-6">
+    <div class="absolute inset-0 flex items-center">
+        <div class="w-full border-t border-slate-300"></div>
+    </div>
+    <div class="relative flex justify-center">
+        <span class="bg-white px-3 text-slate-500 text-sm">atau</span>
+    </div>
+</div>
+
+<a href="{{ url('/auth/google') }}"
+   class="w-full flex items-center justify-center gap-3 py-4 border-2 border-slate-200 rounded-2xl font-bold hover:bg-slate-50 transition">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
+         alt="Google"
+         class="w-5 h-5">
+    Continue with Google
+</a>
         </form>
         <div class="text-center mt-6">
             <p class="text-sm text-slate-500">Belum punya organisasi? <a href="{{ route('admin.register') }}" class="font-bold text-indigo-600 hover:text-indigo-700">Daftar sekarang</a></p>

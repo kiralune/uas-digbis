@@ -76,8 +76,8 @@
                             Sisa stok: <span class="font-bold underline">{{ $event->stock }} Tiket lagi!</span>
                         </p>
                     </div>
-                    <div>
-                        <a href="{{url('checkout/'.$event->id)}}"
+                    <div class="space-y-4">
+                        <a href="{{ url('checkout/'.$event->id) }}"
                             class="inline-block px-10 py-5 bg-white text-indigo-600 rounded-2xl font-black text-xl hover:scale-105 transition-transform shadow-xl">
                             Pesan Sekarang
                         </a>
