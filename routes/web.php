@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController as EventAdminController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\GoogleController;
+use App\Http\Controllers\PublicAuthController;
 
 
 
@@ -18,10 +20,19 @@ Route::post('/checkout/{event}', [App\Http\Controllers\CheckoutController::class
 Route::get('/checkout', [EventController::class,'checkout'])->name('checkout');
 Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
 
-// Rute Login bebas akses
-Route::get('/login', function () {
-    return redirect()->route('admin.login');
-})->name('login');
+// Rute publik auth untuk End User
+Route::get('/login', [PublicAuthController::class, 'showLoginUser'])->name('login');
+Route::post('/login', [PublicAuthController::class, 'loginUser'])->name('login.post');
+Route::get('/register', [PublicAuthController::class, 'showRegisterUser'])->name('register');
+Route::post('/register', [PublicAuthController::class, 'registerUser'])->name('register.post');
+
+// Rute publik auth untuk Organizer
+Route::get('/login/organizer', [PublicAuthController::class, 'showLoginOrganizer'])->name('organizer.login');
+Route::post('/login/organizer', [PublicAuthController::class, 'loginOrganizer'])->name('organizer.login.post');
+Route::get('/register/organizer', [PublicAuthController::class, 'showRegisterOrganizer'])->name('organizer.register');
+Route::post('/register/organizer', [PublicAuthController::class, 'registerOrganizer'])->name('organizer.register.post');
+
+Route::post('/logout', [PublicAuthController::class, 'logout'])->name('logout');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');
@@ -43,3 +54,6 @@ Route::get('/payment/{order_id}', [\App\Http\Controllers\CheckoutController::cla
 Route::get('/success/{order_id}', [\App\Http\Controllers\CheckoutController::class, 'success'])->name('checkout.success');
 
 Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransWebhookController::class, 'handle']);
+
+Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
+Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
