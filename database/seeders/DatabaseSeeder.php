@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,8 +16,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $organization = Organization::firstOrCreate(
+            ['slug' => 'amikom'],
+            [
+                'name' => 'Amikom',
+                'status' => 'active',
+            ]
+        );
+
         // 1. Akun Admin Utama
         \App\Models\User::create([
+            'organization_id' => $organization->id,
             'name' => 'Admin Amikom',
             'email' => 'admin@amikom.ac.id',
             'password' => bcrypt('password'),
@@ -52,6 +62,7 @@ class DatabaseSeeder extends Seeder
             
         // 3. Insert Sampel Events
         \App\Models\Event::create([
+            'organization_id' => $organization->id,
             'category_id' => $category2->id,
             'title' => 'Jazz Night 2025',
             'description' => 'Nikmati malam yang indah dengan alunan musik jazz yang merdu.',
@@ -63,6 +74,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Event::create([
+            'organization_id' => $organization->id,
             'category_id' => $category->id,
             'title' => 'Hackaton - Unleash Your Inner Developer',
             'description' => 'Ayo asah skill coding kamu dan ciptakan solusi inovatif untuk tantangan masa depan!',
@@ -74,6 +86,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         \App\Models\Event::create([
+            'organization_id' => $organization->id,
             'category_id' => $category->id,
             'title' => 'AI & FUTURE TECH SUMMIT 2026',
             'description' => 'Jelajahi tren terkini dalam kecerdasan buatan dan teknologi masa depan bersama para ahli di bidangnya.',

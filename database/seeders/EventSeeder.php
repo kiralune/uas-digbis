@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Event;
 use App\Models\Category;
+use App\Models\Organization;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -14,6 +15,8 @@ class EventSeeder extends Seeder
      */
     public function run(): void
     {
+        $organization = Organization::first();
+
         // Ambil semua kategori yang sudah ada
         $categories = Category::all();
 
@@ -62,6 +65,7 @@ class EventSeeder extends Seeder
                 $template = $eventTemplates[$category->name];
                 
                 Event::create([
+                    'organization_id' => $organization?->id,
                     'category_id' => $category->id,
                     'title' => $template['title'],
                     'description' => $template['description'],

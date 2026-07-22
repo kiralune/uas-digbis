@@ -15,9 +15,9 @@ class HomeController extends Controller
         $partners = Partners::all();
 
         // 2. Buat kueri dasar untuk mengambil event: 
-        // - Gunakan Eager loading `category`
+        // - Gunakan Eager loading `category` dan `organization`
         // - Hanya tampilkan kegiatan dengan jadwal yang belum kedaluwarsa (>= hari ini)
-        $query = Event::with('category')
+        $query = Event::with(['category', 'organization'])
                       ->where('date', '>=', now())
                       ->orderBy('date', 'asc');
 

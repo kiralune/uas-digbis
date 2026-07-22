@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\OrganizerController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\OrganizerDashboardController;
 use App\Http\Controllers\Admin\EventController as EventAdminController;
 use App\Http\Controllers\Admin\CategoryController;
 
@@ -17,6 +19,7 @@ Route::get('/checkout/{event}', [App\Http\Controllers\CheckoutController::class,
 Route::post('/checkout/{event}', [App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout', [EventController::class,'checkout'])->name('checkout');
 Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
+Route::get('/organizers/{organization}', [OrganizerController::class, 'show'])->name('organizers.show');
 
 // Rute Login bebas akses
 Route::get('/login', function () {
@@ -24,6 +27,8 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('register', [AuthController::class, 'register'])->name('register.post');
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('login', [AuthController::class, 'login'])->name('login.post');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
@@ -31,10 +36,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
     // Mengamankan Route Administrasi di balik tembok (Middleware)
     Route::middleware(['auth', 'admin'])->group(function () {
         Route::get('/', [DashboardController::class,'index'])->name('dashboard');
+        Route::get('organizer/dashboard', [OrganizerDashboardController::class, 'index'])->name('organizer.dashboard');
         Route::resource('events', EventAdminController::class);
         Route::resource('partners', \App\Http\Controllers\PartnerController::class);
         Route::resource('categories', CategoryController::class)->except('show');
-        Route::get('transactions', [DashboardController::class,'indexTransaction'])->name('transactions.index');
         Route::get('transactions', [\App\Http\Controllers\Admin\TransactionController::class, 'index'])->name('transactions.index');
     });
 });

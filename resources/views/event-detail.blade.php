@@ -12,9 +12,13 @@
                     <div class="flex items-center gap-4">
                         <div
                             class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
-                            AB</div>
+                            {{ strtoupper(substr($event->organization->name ?? 'Organizer', 0, 2)) }}</div>
                         <div>
-                            <p class="font-bold text-slate-800">ABP Productions</p>
+                            <p class="font-bold text-slate-800">
+                            <a href="{{ route('organizers.show', $event->organization) }}" class="hover:text-indigo-600 transition">
+                                {{ $event->organization->name ?? 'Independent Organizer' }}
+                            </a>
+                        </p>
                             <p class="text-xs text-slate-500">Verified Organizer</p>
                         </div>
                     </div>

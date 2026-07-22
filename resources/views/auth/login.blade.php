@@ -34,6 +34,9 @@
             </div>
             <button type="submit" class="w-full py-4 bg-indigo-600 text-white rounded-2xl font-black text-xl shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Masuk</button>
         </form>
+        <div class="text-center mt-6">
+            <p class="text-sm text-slate-500">Belum punya organisasi? <a href="{{ route('admin.register') }}" class="font-bold text-indigo-600 hover:text-indigo-700">Daftar sekarang</a></p>
+        </div>
     </div>
 </body>
 </html>

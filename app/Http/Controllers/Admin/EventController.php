@@ -5,16 +5,34 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Event;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Event::class, 'event');
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
+        $user = Auth::user();
+
+        if ($user?->role === 'organizer' && ! $user?->organization_id) {
+            abort(403, 'Akun organizer belum terhubung ke organisasi.');
+        }
+
         // Memakai relasi dan pengaturan limit paginasi (10 entri per halaman)
-        $events = \App\Models\Event::with('category')->latest()->paginate(10);
+        $query = Event::with('category');
+
+        if ($user?->role === 'organizer') {
+            $query->where('organization_id', $user->organization_id);
+        }
+
+        $events = $query->latest()->paginate(10);
         return view('admin.events.index', compact('events'));
     }
 
@@ -32,8 +50,14 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+
+        if ($user?->role === 'organizer' && ! $user?->organization_id) {
+            abort(403, 'Akun organizer belum terhubung ke organisasi.');
+        }
+
         // Menerapkan validasi data request dari pengguna
-        $data = $request->validate([
+        $rules = [
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -42,7 +66,13 @@ class EventController extends Controller
             'price' => 'required|numeric|min:0',
             'stock' => 'required|numeric|min:1',
             'poster' => 'nullable|image|max:2048' //Maksimal 2MB
-        ]);
+        ];
+
+        if ($user?->role === 'superadmin') {
+            $rules['organization_id'] = 'required|exists:organizations,id';
+        }
+
+        $data = $request->validate($rules);
 
          if ($request->hasFile('poster')) {
         // Simpan ke direktori storage/app/public/posters
@@ -50,7 +80,11 @@ class EventController extends Controller
         }
 
         // Menyimpan data yang telah divalidasi ke dalam tabel menggunakan Model
-        \App\Models\Event::create($data);
+        if ($user?->role === 'organizer') {
+            $data['organization_id'] = $user->organization_id;
+        }
+
+        Event::create($data);
 
         return redirect()->route('admin.events.index')->with('success', 'Data Event berhasil ditambahkan.');
 }
@@ -78,6 +112,7 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
