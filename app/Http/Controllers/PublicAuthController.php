@@ -26,6 +26,10 @@ class PublicAuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
+            if (in_array(auth()->user()->role, ['superadmin', 'admin'], true)) {
+                return redirect()->route('admin.dashboard');
+            }
+
             if (auth()->user()->role !== 'user') {
                 Auth::logout();
                 return back()->withErrors([
@@ -65,6 +69,37 @@ class PublicAuthController extends Controller
         return redirect()->route('home');
     }
 
+    public function showLoginAdmin()
+    {
+        return view('auth.admin-login');
+    }
+
+    public function loginAdmin(Request $request)
+    {
+        $credentials = $request->validate([
+            'email' => ['required', 'email'],
+            'password' => ['required'],
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            if (! in_array(auth()->user()->role, ['superadmin', 'admin'], true)) {
+                Auth::logout();
+
+                return back()->withErrors([
+                    'email' => 'Akun ini tidak memiliki akses admin.',
+                ])->withInput();
+            }
+
+            return redirect()->route('admin.dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'Email atau password salah.',
+        ])->withInput();
+    }
+
     public function showLoginOrganizer()
     {
         return view('auth.organizer-login');
@@ -79,6 +114,10 @@ class PublicAuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+
+            if (in_array(auth()->user()->role, ['superadmin', 'admin'], true)) {
+                return redirect()->route('admin.dashboard');
+            }
 
             if (auth()->user()->role !== 'organizer') {
                 Auth::logout();

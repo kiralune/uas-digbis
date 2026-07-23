@@ -11,6 +11,7 @@ use App\Http\Controllers\Organizer\EventController as EventOrganizerController;
 use App\Http\Controllers\Organizer\CategoryController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicAuthController;
+use App\Http\Controllers\AdminController;
 
 
 
@@ -36,6 +37,22 @@ Route::get('/register/organizer', [PublicAuthController::class, 'showRegisterOrg
 Route::post('/register/organizer', [PublicAuthController::class, 'registerOrganizer'])->name('organizer_auth.register.post');
 
 Route::post('/logout', [PublicAuthController::class, 'logout'])->name('logout');
+
+Route::get('/login/admin', [PublicAuthController::class, 'showLoginAdmin'])->name('admin_auth.login');
+Route::post('/login/admin', [PublicAuthController::class, 'loginAdmin'])->name('admin_auth.login.post');
+
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('admin')->name('admin.')->group(function () {
+        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/organizers', [AdminController::class, 'organizers'])->name('organizers.index');
+        Route::get('/organizers/{organization}', [AdminController::class, 'showOrganizer'])->name('organizers.show');
+        Route::post('/organizers/{organization}/verify', [AdminController::class, 'verifyOrganizer'])->name('organizers.verify');
+        Route::get('/events', [AdminController::class, 'events'])->name('events.index');
+        Route::get('/transactions', [AdminController::class, 'transactions'])->name('transactions.index');
+        Route::get('/partners', [AdminController::class, 'partners'])->name('partners.index');
+        Route::get('/categories', [AdminController::class, 'categories'])->name('categories.index');
+    });
+});
 
 Route::prefix('organizer')->name('organizer.')->group(function () {
     Route::get('register', [AuthController::class, 'showRegister'])->name('register');
