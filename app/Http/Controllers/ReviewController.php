@@ -5,9 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Review;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
+    public function index()
+    {
+        $reviews = Review::with(['event.partner', 'transaction'])
+            ->where('customer_email', Auth::user()->email)
+            ->latest()
+            ->get();
+
+        return view('reviews.index', compact('reviews'));
+    }
     private function authorizeReviewWindow(Transaction $transaction): void
     {
         $transaction->loadMissing('event.partner', 'review');

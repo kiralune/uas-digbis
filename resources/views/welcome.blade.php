@@ -103,6 +103,7 @@
                     ? $event->poster_path
                     : asset('storage/' . ltrim($event->poster_path, '/')))
                 : asset('assets/concert.png');
+            $soldOut = isset($event->stock) && $event->stock <= 0;
         @endphp
         <div
             class="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden">
@@ -126,7 +127,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A10.966 10.966 0 0112 15c2.4 0 4.62.86 6.328 2.304M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
-                        <span>Penyelenggara: {{ $event->organization->name ?? 'Independent' }}</span>
+                        <span>Penyelenggara: {{ optional($event->organization)->name ?? 'Independent' }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-center pt-4 border-t">

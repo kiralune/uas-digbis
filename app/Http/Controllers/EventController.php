@@ -34,6 +34,7 @@ class EventController extends Controller
         $categories = \App\Models\Category::all();
 
         $transactions = Transaction::with(['event.partner', 'review'])
+            ->where('customer_email', auth()->user()->email)
             ->latest()
             ->get();
 
