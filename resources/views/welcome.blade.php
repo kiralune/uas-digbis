@@ -97,17 +97,18 @@
         <!-- Zona Menampilkan Grid List Event -->
  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach($events as $event)
-        @php $soldOut = (int) $event->stock <= 0; @endphp
+        @php
+            $posterUrl = $event->poster_path
+                ? (str_starts_with($event->poster_path, 'http')
+                    ? $event->poster_path
+                    : asset('storage/' . ltrim($event->poster_path, '/')))
+                : asset('assets/concert.png');
+            $soldOut = isset($event->stock) && $event->stock <= 0;
+        @endphp
         <div
-            class="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden {{ $soldOut ? 'opacity-80 grayscale' : '' }}">
+            class="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-300 overflow-hidden">
             <div class="relative overflow-hidden aspect-[3/4]">
-                <img src="{{ $event->poster_url }}" alt="{{ $event->title }}" class="w-full h-full object-cover transition-transform duration-500 {{ $soldOut ? 'blur-[2px] grayscale saturate-50' : 'group-hover:scale-110' }}">
-                @if($soldOut)
-                    <div class="absolute inset-0 bg-black/20"></div>
-                    <div class="absolute inset-0 flex items-center justify-center">
-                        <span class="px-4 py-2 rounded-full bg-rose-600 text-white font-black shadow-lg">Habis</span>
-                    </div>
-                @endif
+                <img src="{{ $posterUrl }}" alt="{{ $event->title }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                 <div
                     class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur rounded-lg text-xs font-bold uppercase text-indigo-600">
                     {{ $event->category->name }}</div>
@@ -126,7 +127,7 @@
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A10.966 10.966 0 0112 15c2.4 0 4.62.86 6.328 2.304M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                         </svg>
-                        <span>Penyelenggara: {{ $event->organization->name ?? 'Independent' }}</span>
+                        <span>Penyelenggara: {{ optional($event->organization)->name ?? 'Independent' }}</span>
                     </div>
                 </div>
                 <div class="flex justify-between items-center pt-4 border-t">

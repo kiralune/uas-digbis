@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Transaction extends Model
 {
     protected $fillable = [
-        'organization_id', 'event_id', 'order_id', 'customer_name', 'customer_email', 'customer_phone', 'total_price', 'status', 'snap_token'
+        'event_id', 'order_id', 'customer_name', 'customer_email', 'customer_phone', 'total_price', 'status', 'snap_token', 'review_reminder_sent_at'
+    ];
+
+    protected $casts = [
+        'review_reminder_sent_at' => 'datetime',
     ];
 
     public function event(): BelongsTo
@@ -16,8 +20,8 @@ class Transaction extends Model
         return $this->belongsTo(Event::class);
     }
 
-    public function organization(): BelongsTo
+    public function review()
     {
-        return $this->belongsTo(Organization::class);
+        return $this->hasOne(Review::class);
     }
 }

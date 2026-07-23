@@ -11,18 +11,30 @@ use App\Http\Controllers\Organizer\EventController as EventOrganizerController;
 use App\Http\Controllers\Organizer\CategoryController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicAuthController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\AdminController;
-
-
 
 // Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/events', [HomeController::class, 'index'])->name('events.index');
 Route::get('/events/{event}', [\App\Http\Controllers\EventController::class, 'show'])->name('events.show');
+Route::redirect('/admin', '/organizer');
+Route::redirect('/admin/dashboard', '/organizer/dashboard');
+Route::redirect('/admin/login', '/organizer/login');
+Route::redirect('/admin/register', '/organizer/register');
+Route::redirect('/admin/{any}', '/organizer/{any}')->where('any', '.*');
 Route::get('/checkout/{event}', [App\Http\Controllers\CheckoutController::class, 'create'])->name('checkout.create');
 Route::post('/checkout/{event}', [App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout', [EventController::class,'checkout'])->name('checkout');
-Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
-Route::get('/organizers/{organization}', [OrganizerController::class, 'show'])->name('organizers.show');
+Route::middleware('auth')->group(function () {
+    Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
+    Route::get('/my-reviews', [ReviewController::class, 'index'])->name('reviews.index');
+});
+Route::get('/organizers/{partner}', [OrganizerController::class, 'show'])->name('organizers.show');
+Route::get('/review/{transaction:order_id}', [ReviewController::class, 'create'])->name('reviews.create');
+Route::post('/review/{transaction:order_id}', [ReviewController::class, 'store'])->name('reviews.store');
+Route::get('/review/{transaction:order_id}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+Route::patch('/review/{transaction:order_id}', [ReviewController::class, 'update'])->name('reviews.update');
 
 // Rute publik auth untuk End User
 Route::get('/login', [PublicAuthController::class, 'showLoginUser'])->name('login');
@@ -37,6 +49,9 @@ Route::get('/register/organizer', [PublicAuthController::class, 'showRegisterOrg
 Route::post('/register/organizer', [PublicAuthController::class, 'registerOrganizer'])->name('organizer_auth.register.post');
 
 Route::post('/logout', [PublicAuthController::class, 'logout'])->name('logout');
+Route::get('/profile', function () {
+    return view('profile');
+})->middleware('auth')->name('profile');
 
 Route::get('/login/admin', [PublicAuthController::class, 'showLoginAdmin'])->name('admin_auth.login');
 Route::post('/login/admin', [PublicAuthController::class, 'loginAdmin'])->name('admin_auth.login.post');
@@ -89,3 +104,8 @@ Route::post('/midtrans/callback', [\App\Http\Controllers\MidtransWebhookControll
 
 Route::get('/auth/google', [GoogleController::class, 'redirect'])->name('auth.google');
 Route::get('/auth/google/callback', [GoogleController::class, 'callback'])->name('auth.google.callback');
+
+// Redirect unknown routes to home so no page shows 404 by default
+Route::fallback(function () {
+    return redirect()->route('home');
+});

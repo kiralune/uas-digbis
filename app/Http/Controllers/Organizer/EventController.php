@@ -59,6 +59,7 @@ class EventController extends Controller
         // Menerapkan validasi data request dari pengguna
         $rules = [
             'category_id' => 'required|exists:categories,id',
+            'partner_id' => 'required|exists:partners,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'date' => 'required|date',
@@ -115,6 +116,7 @@ class EventController extends Controller
 
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'partner_id' => 'required|exists:partners,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',

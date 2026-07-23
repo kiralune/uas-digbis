@@ -20,6 +20,13 @@
      </div>
      @endif
 
+     @auth
+     <div class="mb-6 p-5 rounded-3xl bg-emerald-50 border border-emerald-100 text-emerald-900">
+         <p class="font-black">Login Google sudah aktif.</p>
+         <p class="text-sm mt-1">Data nama dan email kamu akan terisi otomatis agar checkout lebih cepat.</p>
+     </div>
+     @endauth
+
      <div class="grid grid-cols-1 gap-8">
          @guest
          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
@@ -28,7 +35,7 @@
              <a href="{{ route('auth.google', ['redirect_to' => route('checkout.create', $event->id)]) }}"
                  class="inline-flex items-center justify-center gap-3 w-full rounded-2xl border border-slate-200 py-4 text-slate-900 font-semibold hover:bg-slate-50 transition">
                  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5">
-                 Masuk dengan Google
+                 Continue with Google
              </a>
          </div>
          @endguest
@@ -63,24 +70,25 @@
 
          <!-- Form Card -->
          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
-             <h3 class="text-xl font-bold mb-6 italic text-indigo-600 underline underline-offset-8">📦 Data Pemesan
-                 (Tanpa Login)</h3>
+             <h3 class="text-xl font-bold mb-6 italic text-indigo-600 underline underline-offset-8">📦 Data Pemesan</h3>
              <form action="{{ route('checkout.store', $event->id) }}" method="POST" class="space-y-6">
                  @csrf
                  <div>
                      <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Nama
                          Lengkap</label>
                      <input type="text" name="customer_name" placeholder="Masukkan nama sesuai identitas"
+                         value="{{ old('customer_name', auth()->user()->name ?? '') }}"
                          class="w-full px-5 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
-                         required value="{{ old('customer_name') }}">
+                         required>
                  </div>
                  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                      <div>
                          <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Email
                              Aktif</label>
                          <input type="email" name="customer_email" placeholder="contoh@gmail.com"
+                             value="{{ old('customer_email', auth()->user()->email ?? '') }}"
                              class="w-full px-5 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
-                             required value="{{ old('customer_email') }}">
+                             required>
                          <p class="text-[10px] text-slate-400 mt-2 font-bold uppercase tracking-tighter">*E-Ticket
                              akan dikirim ke email ini</p>
                      </div>

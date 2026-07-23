@@ -5,20 +5,28 @@
         <!-- Left: Poster -->
         <div class="lg:col-span-1">
             <div class="sticky top-32">
-                <img src="{{ $event->poster_url }}" alt="{{ $event->title }}" class="w-full rounded-[2.5rem] shadow-2xl border-8 border-white object-cover aspect-[3/4]">
+                @php
+                    $posterUrl = $event->poster_path
+                        ? (str_starts_with($event->poster_path, 'http')
+                            ? $event->poster_path
+                            : asset('storage/' . ltrim($event->poster_path, '/')))
+                        : asset('assets/concert.png');
+                @endphp
+                <img src="{{ $posterUrl }}" alt="{{ $event->title }}" class="w-full rounded-[2.5rem] shadow-2xl border-8 border-white object-cover aspect-[3/4]">
                 <div class="mt-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
                     <h4 class="font-bold mb-4">Penyelenggara</h4>
                     <div class="flex items-center gap-4">
                         <div
                             class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
-                            {{ strtoupper(substr($event->organization->name ?? 'Organizer', 0, 2)) }}</div>
+                            {{ strtoupper(substr($event->partner->name ?? 'AB', 0, 2)) }}</div>
                         <div>
-                            <p class="font-bold text-slate-800">
-                            <a href="{{ route('organizers.show', $event->organization) }}" class="hover:text-indigo-600 transition">
-                                {{ $event->organization->name ?? 'Independent Organizer' }}
-                            </a>
-                        </p>
-                            <p class="text-xs text-slate-500">Verified Organizer</p>
+                            @if($event->partner)
+                                <a href="{{ route('organizers.show', $event->partner) }}" class="font-bold text-slate-800 hover:text-indigo-600 transition">{{ $event->partner->name }}</a>
+                                <p class="text-xs text-slate-500">Verified Organizer</p>
+                            @else
+                                <p class="font-bold text-slate-800">Penyelenggara belum ditentukan</p>
+                                <p class="text-xs text-slate-500">Data organizer akan tampil setelah event dikaitkan</p>
+                            @endif
                         </div>
                     </div>
                 </div>

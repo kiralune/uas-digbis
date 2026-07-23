@@ -6,19 +6,18 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Laravel\Socialite\Facades\Socialite;
 
 class GoogleController extends Controller
 {
     public function redirect(Request $request)
     {
         $request->session()->put('login_redirect', $request->query('redirect_to', route('home')));
-        return Socialite::driver('google')->redirect();
+        return app('Laravel\Socialite\Contracts\Factory')->driver('google')->redirect();
     }
 
     public function callback(Request $request)
     {
-        $googleUser = Socialite::driver('google')->user();
+        $googleUser = app('Laravel\Socialite\Contracts\Factory')->driver('google')->user();
 
         $user = User::where('email', $googleUser->getEmail())->first();
 

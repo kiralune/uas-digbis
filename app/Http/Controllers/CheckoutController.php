@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Event;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class CheckoutController extends Controller
@@ -33,7 +36,8 @@ class CheckoutController extends Controller
 
         // 3. Generate Kode TRX (Unik)
         $orderId = 'TRX-' . time() . '-' . Str::random(5);
-        $totalPrice = $event->price + 5000; // Menambahkan biaya admin (dummy)
+        $adminFee = $event->price > 0 ? 5000 : 0;
+        $totalPrice = $event->price + $adminFee;
 
         // 4. Merekam Transaksi ke Database
         $transaction = Transaction::create([
@@ -46,6 +50,12 @@ class CheckoutController extends Controller
             'total_price' => $totalPrice,
             'status' => 'pending',
         ]);
+
+        if ((int) $event->price === 0) {
+            $this->finalizeFreeTransaction($transaction);
+
+            return redirect()->route('checkout.success', $transaction->order_id);
+        }
 
         // --- INTEGRASI SNAP MIDTRANS ---
         
@@ -102,6 +112,12 @@ class CheckoutController extends Controller
         $categories = \App\Models\Category::all();
 
         $transaction = Transaction::with('event')->where('order_id', $order_id)->firstOrFail();
+                session(['ticket_email' => $transaction->customer_email]);
+                session(['ticket_order_id' => $transaction->order_id]);
+
+                if ((int) $transaction->event->price === 0 && strtolower($transaction->status) === 'success') {
+                    return view('checkout.success', compact('transaction', 'categories'));
+                }
         
         // Konfigurasi Midtrans untuk mengecek status transaksi langsung ke API
         \Midtrans\Config::$serverKey = env('MIDTRANS_SERVER_KEY');
@@ -143,5 +159,26 @@ class CheckoutController extends Controller
         }
 
         return view('checkout.success', compact('transaction', 'categories'));
+    }
+
+    private function finalizeFreeTransaction(Transaction $transaction): void
+    {
+        DB::transaction(function () use ($transaction) {
+            $event = $transaction->event()->lockForUpdate()->first();
+
+            if (! $event || $event->stock <= 0) {
+                throw new \Exception('Stok acara tidak tersedia saat memproses event gratis.');
+            }
+
+            $event->decrement('stock');
+            $transaction->update(['status' => 'success']);
+
+            try {
+                Mail::to($transaction->customer_email)
+                    ->send(new \App\Mail\EventTicketMail($transaction));
+            } catch (\Exception $e) {
+                Log::error('Gagal mengirim email E-Ticket free event: ' . $e->getMessage());
+            }
+        });
     }
 }

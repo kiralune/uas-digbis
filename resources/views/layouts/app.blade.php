@@ -23,6 +23,10 @@
 <body class="bg-slate-50 text-slate-900">
 
     @unless(View::hasSection('hideNav'))
+        @php
+            $homeActive = request()->routeIs('home');
+            $ticketActive = request()->routeIs('ticket');
+        @endphp
         <!-- Navigation -->
         <nav
             class="glass sticky top-8 z-40 mx-4 mt-4 px-6 py-4 rounded-2xl border border-white/20 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
@@ -31,43 +35,13 @@
                 <span class="text-xl font-bold tracking-tight">AmikomEventHub</span>
             </div>
             <div class="hidden md:flex items-center gap-8 font-medium">
-                <a href="{{ route('home') }}" class="text-indigo-600">Beranda</a>
-                <div class="relative group">
-                    <a href="{{ route('home') }}#events"
-                        class="inline-flex items-center gap-1 hover:text-indigo-600 transition"
-                        aria-haspopup="true">
-                        Event
-
-                        <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                stroke-width="2" d="m6 9 6 6 6-6" />
-                        </svg>
-                    </a>
-
-                    <div class="absolute left-1/2 top-full z-50 hidden w-60 -translate-x-1/2 pt-4 group-hover:block group-focus-within:block">
-                        <div class="overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 shadow-xl shadow-slate-200/70">
-                            <a href="{{ route('home') }}#events"
-                                class="block rounded-xl px-4 py-3 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition">
-                                Semua Event
-                            </a>
-
-                            @isset($categories)
-                                @foreach($categories as $cat)
-                                    <a href="{{ route('home') }}?category={{ $cat->slug }}#events"
-                                        class="block rounded-xl px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition">
-                                        {{ $cat->name }}
-                                    </a>
-                                @endforeach
-                            @else
-                                <p class="px-4 py-3 text-sm text-slate-400">
-                                    Kategori belum tersedia.
-                                </p>
-                            @endisset
-                        </div>
-                    </div>
-                </div>
-                <a href="{{ route('home') }}#partner" class="hover:text-indigo-600 transition">Tentang Kami</a>
+                <a href="{{ route('home') }}" class="{{ $homeActive ? 'text-indigo-600' : 'hover:text-indigo-600 transition' }}">Jelajahi</a>
+                <a href="{{ route('ticket') }}" class="{{ $ticketActive ? 'text-indigo-600' : 'hover:text-indigo-600 transition' }}">Tiket Saya</a>
+                @auth
+                    <a href="{{ route('reviews.index') }}" class="hover:text-indigo-600 transition">Review Saya</a>
+                @endauth
+                <a href="#" class="hover:text-indigo-600 transition">Kategori</a>
+                <a href="#" class="hover:text-indigo-600 transition">Tentang Kami</a>
             </div>
             <div class="flex items-center gap-3">
                 @guest
@@ -75,11 +49,13 @@
                     <a href="{{ route('register') }}"
                        class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Daftar</a>
                 @else
-                    <span class="text-sm text-slate-600">Halo, {{ auth()->user()->name }}</span>
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-900 font-semibold hover:bg-slate-200 transition">Logout</button>
-                    </form>
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('profile') }}" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition">Profil</a>
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-900 font-semibold hover:bg-slate-200 transition">Logout</button>
+                        </form>
+                    </div>
                 @endguest
             </div>
         </nav>
