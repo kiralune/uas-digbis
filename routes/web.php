@@ -4,11 +4,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\OrganizerController;
-use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\OrganizerDashboardController;
-use App\Http\Controllers\Admin\EventController as EventAdminController;
-use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Organizer\AuthController;
+use App\Http\Controllers\Organizer\DashboardController;
+use App\Http\Controllers\Organizer\OrganizerDashboardController;
+use App\Http\Controllers\Organizer\EventController as EventOrganizerController;
+use App\Http\Controllers\Organizer\CategoryController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicAuthController;
 
@@ -30,28 +30,28 @@ Route::get('/register', [PublicAuthController::class, 'showRegisterUser'])->name
 Route::post('/register', [PublicAuthController::class, 'registerUser'])->name('register.post');
 
 // Rute publik auth untuk Organizer
-Route::get('/login/organizer', [PublicAuthController::class, 'showLoginOrganizer'])->name('organizer.login');
-Route::post('/login/organizer', [PublicAuthController::class, 'loginOrganizer'])->name('organizer.login.post');
-Route::get('/register/organizer', [PublicAuthController::class, 'showRegisterOrganizer'])->name('organizer.register');
-Route::post('/register/organizer', [PublicAuthController::class, 'registerOrganizer'])->name('organizer.register.post');
+Route::get('/login/organizer', [PublicAuthController::class, 'showLoginOrganizer'])->name('organizer_auth.login');
+Route::post('/login/organizer', [PublicAuthController::class, 'loginOrganizer'])->name('organizer_auth.login.post');
+Route::get('/register/organizer', [PublicAuthController::class, 'showRegisterOrganizer'])->name('organizer_auth.register');
+Route::post('/register/organizer', [PublicAuthController::class, 'registerOrganizer'])->name('organizer_auth.register.post');
 
 Route::post('/logout', [PublicAuthController::class, 'logout'])->name('logout');
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('organizer')->name('organizer.')->group(function () {
     Route::get('register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('register', [AuthController::class, 'register'])->name('register.post');
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');
     Route::post('login', [AuthController::class, 'login'])->name('login.post');
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Mengamankan Route Administrasi di balik tembok (Middleware)
-    Route::middleware(['auth', 'admin'])->group(function () {
-        Route::get('/', [DashboardController::class,'index'])->name('dashboard');
-        Route::get('organizer/dashboard', [OrganizerDashboardController::class, 'index'])->name('organizer.dashboard');
-        Route::resource('events', EventAdminController::class);
+    // Mengamankan area organizer di balik middleware
+    Route::middleware(['auth', 'organizer'])->group(function () {
+        Route::get('/', [DashboardController::class, 'index'])->name('home');
+        Route::get('dashboard', [OrganizerDashboardController::class, 'index'])->name('dashboard');
+        Route::resource('events', EventOrganizerController::class);
         Route::resource('partners', \App\Http\Controllers\PartnerController::class);
         Route::resource('categories', CategoryController::class)->except('show');
-        Route::get('transactions', [\App\Http\Controllers\Admin\TransactionController::class, 'index'])->name('transactions.index');
+        Route::get('transactions', [\App\Http\Controllers\Organizer\TransactionController::class, 'index'])->name('transactions.index');
     });
 });
 

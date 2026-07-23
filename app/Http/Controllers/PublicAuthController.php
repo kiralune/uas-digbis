@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class PublicAuthController extends Controller
 {
@@ -27,7 +29,7 @@ class PublicAuthController extends Controller
             if (auth()->user()->role !== 'user') {
                 Auth::logout();
                 return back()->withErrors([
-                    'email' => 'Akun ini bukan End User. Silakan masuk lewat halaman Organizer atau Admin.',
+                    'email' => 'Akun ini bukan End User. Silakan masuk lewat halaman Organizer.',
                 ])->withInput();
             }
 
@@ -81,11 +83,11 @@ class PublicAuthController extends Controller
             if (auth()->user()->role !== 'organizer') {
                 Auth::logout();
                 return back()->withErrors([
-                    'email' => 'Akun ini bukan Organizer. Silakan masuk lewat halaman End User atau Admin.',
+                    'email' => 'Akun ini bukan Organizer. Silakan masuk lewat halaman End User.',
                 ])->withInput();
             }
 
-            return redirect()->route('home');
+            return redirect()->route('organizer.dashboard');
         }
 
         return back()->withErrors([
@@ -106,7 +108,22 @@ class PublicAuthController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
+        $slug = Str::slug($data['name']);
+        $originalSlug = $slug;
+        $counter = 1;
+
+        while (Organization::where('slug', $slug)->exists()) {
+            $slug = $originalSlug . '-' . $counter++;
+        }
+
+        $organization = Organization::create([
+            'name' => $data['name'],
+            'slug' => $slug,
+            'status' => 'active',
+        ]);
+
         $user = User::create([
+            'organization_id' => $organization->id,
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
@@ -114,7 +131,7 @@ class PublicAuthController extends Controller
         ]);
 
         Auth::login($user);
-        return redirect()->route('home');
+        return redirect()->route('organizer.dashboard');
     }
 
     public function logout(Request $request)

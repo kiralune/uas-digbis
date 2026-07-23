@@ -53,7 +53,7 @@
         </div>
 
         <div class="mt-4 text-center text-slate-400 text-sm">
-            Ingin daftar sebagai Organizer? <a href="{{ route('organizer.register') }}" class="text-indigo-600">Daftar Organizer</a>
+            Ingin daftar sebagai Organizer? <a href="{{ route('organizer_auth.register') }}" class="text-indigo-600">Daftar Organizer</a>
         </div>
     </div>
 </main>

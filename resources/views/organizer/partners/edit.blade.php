@@ -1,11 +1,11 @@
-@extends('layouts.admin')
-@section('title', 'Edit Partner - Admin')
+@extends('layouts.organizer')
+@section('title', 'Edit Partner - Organizer')
 @section('page_title', 'Edit Partner')
 @section('page_subtitle', 'Perbarui data mitra bisnis AmikomEventHub Anda.')
 
 @section('content')
 <div class="bg-white p-8 rounded-[2.5rem] border border-slate-100 shadow-sm max-w-3xl">
-    <form action="{{ route('admin.partners.update', $partner->id) }}" method="POST" class="space-y-6">
+    <form action="{{ route('organizer.partners.update', $partner->id) }}" method="POST" class="space-y-6">
         @csrf
         @method('PUT')
         
@@ -27,7 +27,7 @@
         </div>
 
         <div class="pt-4 flex justify-end gap-4 border-t border-slate-100">
-            <a href="{{ route('admin.partners.index') }}" class="px-6 py-4 text-slate-500 font-bold hover:text-slate-800 transition">Batal</a>
+            <a href="{{ route('organizer.partners.index') }}" class="px-6 py-4 text-slate-500 font-bold hover:text-slate-800 transition">Batal</a>
             <button type="submit" class="px-8 py-4 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition">Simpan Perubahan</button>
         </div>
     </form>

@@ -26,7 +26,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.register.post') }}" method="POST" class="space-y-6">
+        <form action="{{ route('organizer_auth.register.post') }}" method="POST" class="space-y-6">
             @csrf
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Nama Organisasi</label>
@@ -52,7 +52,7 @@
         </form>
 
         <div class="text-center mt-6">
-            <p class="text-sm text-slate-500">Sudah punya akun? <a href="{{ route('admin.login') }}" class="font-bold text-indigo-600 hover:text-indigo-700">Masuk di sini</a></p>
+            <p class="text-sm text-slate-500">Sudah punya akun? <a href="{{ route('organizer_auth.login') }}" class="font-bold text-indigo-600 hover:text-indigo-700">Masuk di sini</a></p>
         </div>
     </div>
 </body>

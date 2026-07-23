@@ -39,7 +39,7 @@
                 </form>
 
                 <div class="grid gap-4 mt-4">
-                    <a href="{{ route('organizer.login') }}"
+                    <a href="{{ route('organizer_auth.login') }}"
                        class="flex items-center justify-center gap-3 w-full rounded-2xl border border-indigo-600 bg-indigo-50 py-4 text-indigo-700 font-semibold hover:bg-indigo-100 transition">
                         Masuk sebagai Organizer
                     </a>

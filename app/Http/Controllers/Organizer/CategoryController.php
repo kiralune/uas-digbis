@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
@@ -18,12 +18,12 @@ class CategoryController extends Controller
             $categories = Category::all();
         }
         
-        return view('admin.categories.index', compact('categories', 'search'));
+        return view('organizer.categories.index', compact('categories', 'search'));
     }
 
     public function create()
     {
-        return view('admin.categories.create');
+        return view('organizer.categories.create');
     }
 
     public function store(Request $request)
@@ -37,12 +37,12 @@ class CategoryController extends Controller
 
         Category::create($validated);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil ditambahkan!');
+        return redirect()->route('organizer.categories.index')->with('success', 'Kategori berhasil ditambahkan!');
     }
 
     public function edit(Category $category)
     {
-        return view('admin.categories.edit', compact('category'));
+        return view('organizer.categories.edit', compact('category'));
     }
 
     public function update(Request $request, Category $category)
@@ -56,12 +56,12 @@ class CategoryController extends Controller
 
         $category->update($validated);
 
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil diperbarui!');
+        return redirect()->route('organizer.categories.index')->with('success', 'Kategori berhasil diperbarui!');
     }
 
     public function destroy(Category $category)
     {
         $category->delete();
-        return redirect()->route('admin.categories.index')->with('success', 'Kategori berhasil dihapus!');
+        return redirect()->route('organizer.categories.index')->with('success', 'Kategori berhasil dihapus!');
     }
 }

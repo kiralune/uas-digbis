@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.organizer')
 @section('title', 'Dashboard Organizer')
 @section('page_title', 'Dashboard Organizer')
 @section('page_subtitle', 'Selamat datang kembali, ' . auth()->user()->name . ' — ' . optional(auth()->user()->organization)->name)
@@ -13,8 +13,8 @@
                 <p class="mt-2 text-slate-500 max-w-2xl">Ringkasan performa event, transaksi, dan tiket aktif untuk organisasi Anda saja.</p>
             </div>
             <div class="flex flex-wrap gap-3">
-                <a href="{{ route('admin.events.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition">Kelola Event</a>
-                <a href="{{ route('admin.transactions.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition">Lihat Transaksi</a>
+                <a href="{{ route('organizer.events.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition">Kelola Event</a>
+                <a href="{{ route('organizer.transactions.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl border border-slate-200 text-slate-700 hover:bg-slate-50 transition">Lihat Transaksi</a>
             </div>
         </div>
     </div>
@@ -78,13 +78,73 @@
     </div>
 </div>
 
+<div class="grid gap-6 xl:grid-cols-[1.2fr_0.8fr] mb-8">
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-8 border-b">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h3 class="font-black text-xl">Analitik Pendapatan</h3>
+                    <p class="mt-2 text-slate-500 text-sm">Tren pendapatan 6 bulan terakhir dari transaksi berhasil.</p>
+                </div>
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 text-emerald-700 font-semibold text-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    Tingkat keberhasilan {{ $successRate }}%
+                </div>
+            </div>
+        </div>
+        <div class="p-8">
+            @if(count($monthlyRevenue) > 0)
+                <div class="flex items-end gap-4 h-64">
+                    @foreach($monthlyRevenue as $item)
+                        @php $height = $maxMonthlyRevenue > 0 ? max(10, round(($item['value'] / $maxMonthlyRevenue) * 100)) : 10; @endphp
+                        <div class="flex-1 flex flex-col items-center gap-3">
+                            <div class="w-full flex items-end justify-center h-48 rounded-2xl bg-slate-50 p-2">
+                                <div class="w-full rounded-2xl bg-gradient-to-t from-indigo-600 to-cyan-400" style="height: {{ $height }}%"></div>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-xs font-bold uppercase tracking-[0.2em] text-slate-400">{{ $item['label'] }}</p>
+                                <p class="mt-1 text-sm font-black text-slate-700">Rp {{ number_format($item['value'], 0, ',', '.') }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+            @else
+                <div class="flex h-64 items-center justify-center rounded-2xl border border-dashed border-slate-200 bg-slate-50 text-slate-500">
+                    Belum ada transaksi berhasil untuk dianalisis.
+                </div>
+            @endif
+        </div>
+    </div>
+
+    <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
+        <div class="p-8 border-b">
+            <h3 class="font-black text-xl">Ringkasan Kinerja</h3>
+            <p class="mt-2 text-slate-500 text-sm">Snapshot cepat performa organisasi Anda.</p>
+        </div>
+        <div class="p-8 space-y-5">
+            <div class="rounded-2xl bg-indigo-50 p-5">
+                <p class="text-sm font-bold uppercase tracking-[0.2em] text-indigo-600">Pendapatan Bulan Ini</p>
+                <p class="mt-2 text-3xl font-black text-slate-900">Rp {{ number_format(end($monthlyRevenue)['value'] ?? 0, 0, ',', '.') }}</p>
+            </div>
+            <div class="rounded-2xl bg-emerald-50 p-5">
+                <p class="text-sm font-bold uppercase tracking-[0.2em] text-emerald-600">Rata-rata Per Bulan</p>
+                <p class="mt-2 text-3xl font-black text-slate-900">Rp {{ number_format($averageMonthlyRevenue, 0, ',', '.') }}</p>
+            </div>
+            <div class="rounded-2xl bg-amber-50 p-5">
+                <p class="text-sm font-bold uppercase tracking-[0.2em] text-amber-600">Transaksi Sukses</p>
+                <p class="mt-2 text-3xl font-black text-slate-900">{{ $totalSuccessfulTransactions }} / {{ $totalTransactions }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden">
     <div class="p-8 border-b flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
             <h3 class="font-black text-xl">Transaksi Terakhir</h3>
             <p class="mt-2 text-slate-500 text-sm">Menampilkan 5 transaksi terbaru dari organisasi Anda.</p>
         </div>
-        <a href="{{ route('admin.transactions.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition">Lihat Semua</a>
+        <a href="{{ route('organizer.transactions.index') }}" class="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-slate-900 text-white font-semibold hover:bg-slate-800 transition">Lihat Semua</a>
     </div>
     <div class="overflow-x-auto">
         <table class="w-full text-left border-collapse">

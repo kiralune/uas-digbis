@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Organization;
@@ -35,12 +35,12 @@ class AuthController extends Controller
                 Auth::logout();
 
                 return back()->withErrors([
-                    'email' => 'Akun Anda tidak memiliki akses ke panel admin.',
+                    'email' => 'Akun Anda tidak memiliki akses ke panel organizer.',
                 ]);
             }
 
             $request->session()->regenerate();
-            return redirect()->route('admin.dashboard'); // Arahkan ke rute dashboard
+            return redirect()->route('organizer.dashboard'); // Arahkan ke rute dashboard
         }
 
         return back()->withErrors([
@@ -81,7 +81,7 @@ class AuthController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('admin.dashboard');
+        return redirect()->route('organizer.dashboard');
     }
 
     // 3. Fungsi memroses Log Out (Keluar)

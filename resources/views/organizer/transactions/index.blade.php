@@ -1,5 +1,5 @@
- @extends('layouts.admin')
- @section('title', 'Laporan Transaksi - Admin')
+ @extends('layouts.organizer')
+ @section('title', 'Laporan Transaksi - Organizer')
  @section('page_title', 'Laporan Transaksi')
  @section('page_subtitle', 'Pantau arus kas dan penjualan tiket Anda.')
 

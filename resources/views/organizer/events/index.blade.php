@@ -1,11 +1,11 @@
-@extends('layouts.admin')
-@section('title', 'Kelola Event - Admin')
+@extends('layouts.organizer')
+@section('title', 'Kelola Event - Organizer')
 @section('page_title', 'Kelola Event')
 @section('page_subtitle', 'Buat dan atur acara seru Anda di sini.')
 
 @section('content')
 <div class="mb-4 text-right">
-    <a href="{{ route('admin.events.create') }}" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition">
+    <a href="{{ route('organizer.events.create') }}" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition">
         + Tambah Event Baru
     </a>
 </div>
@@ -27,7 +27,7 @@
                 <tr class="hover:bg-slate-50/50 transition">
                     <td class="px-8 py-6 font-bold text-slate-400">{{ $events->firstItem() + $index }}</td>
                     <td class="px-8 py-6">
-                        <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))? asset('storage/' . $event->poster_path): 'https://placehold.co/16x20' }}" class="w-16 h-20 rounded-xl object-cover shadow-sm">
+                        <img src="{{ $event->poster_url }}" class="w-16 h-20 rounded-xl object-cover shadow-sm">
                     </td>
                     <td class="px-8 py-6">
                         <p class="font-black text-slate-800">{{ $event->title }}</p>
@@ -41,14 +41,14 @@
                         <div class="flex gap-2">
                             <!-- Catatan Modul: Deretan tombol fitur modifikasi (U dan D) akan ditanamkan pada tahap berikutnya -->
 
-                            <a href="{{ route('admin.events.edit', $event->id) }}" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition">
+                            <a href="{{ route('organizer.events.edit', $event->id) }}" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 00-2 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                             </a>
 
 
-                            <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus acara ini?');">
+                            <form action="{{ route('organizer.events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus acara ini?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="p-2.5 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white transition">

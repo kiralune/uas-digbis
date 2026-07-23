@@ -67,18 +67,18 @@ class TenantAccessTest extends TestCase
         ]);
 
         $superadmin = User::create([
-            'name' => 'Super Admin',
+            'name' => 'Super Organizer',
             'email' => 'superadmin@example.test',
             'password' => 'password',
             'role' => 'superadmin',
         ]);
 
-        $response = $this->actingAs($superadmin)->get(route('admin.events.index'));
+        $response = $this->actingAs($superadmin)->get(route('organizer.events.index'));
         $response->assertStatus(200);
         $response->assertSee('Event A');
         $response->assertSee('Event B');
 
-        $response = $this->actingAs($superadmin)->get(route('admin.transactions.index'));
+        $response = $this->actingAs($superadmin)->get(route('organizer.transactions.index'));
         $response->assertStatus(200);
         $response->assertSee('ORDER-A-1');
         $response->assertSee('ORDER-B-1');
@@ -144,12 +144,12 @@ class TenantAccessTest extends TestCase
             'role' => 'organizer',
         ]);
 
-        $response = $this->actingAs($organizerA)->get(route('admin.events.index'));
+        $response = $this->actingAs($organizerA)->get(route('organizer.events.index'));
         $response->assertStatus(200);
         $response->assertSee('Event A');
         $response->assertDontSee('Event B</p>');
 
-        $response = $this->actingAs($organizerA)->get(route('admin.transactions.index'));
+        $response = $this->actingAs($organizerA)->get(route('organizer.transactions.index'));
         $response->assertStatus(200);
         $response->assertSee('ORDER-A-1');
         $response->assertDontSee('ORDER-B-1');
@@ -180,7 +180,7 @@ class TenantAccessTest extends TestCase
             'role' => 'organizer',
         ]);
 
-        $response = $this->actingAs($organizerB)->get(route('admin.events.edit', $eventA->id));
+        $response = $this->actingAs($organizerB)->get(route('organizer.events.edit', $eventA->id));
         $response->assertStatus(403);
     }
 
@@ -244,9 +244,10 @@ class TenantAccessTest extends TestCase
             'role' => 'organizer',
         ]);
 
-        $response = $this->actingAs($organizerA)->get(route('admin.organizer.dashboard'));
+        $response = $this->actingAs($organizerA)->get(route('organizer.dashboard'));
         $response->assertStatus(200);
         $response->assertSee('Dashboard Organizer');
+        $response->assertSee('Analitik Pendapatan');
         $response->assertSee('ORDER-A-1');
         $response->assertDontSee('ORDER-B-1');
     }
@@ -262,7 +263,44 @@ class TenantAccessTest extends TestCase
             'role' => 'organizer',
         ]);
 
-        $response = $this->actingAs($organizerA)->get(route('admin.dashboard'));
-        $response->assertRedirect(route('admin.organizer.dashboard'));
+        $response = $this->actingAs($organizerA)->get(route('organizer.home'));
+        $response->assertRedirect(route('organizer.dashboard'));
+    }
+
+    public function test_organizer_login_redirects_to_organizer_dashboard()
+    {
+        $orgA = Organization::create(['name' => 'Tenant A', 'slug' => 'tenant-a', 'status' => 'active']);
+        $organizerA = User::create([
+            'organization_id' => $orgA->id,
+            'name' => 'Organizer A',
+            'email' => 'organizer.login@example.test',
+            'password' => 'password',
+            'role' => 'organizer',
+        ]);
+
+        $response = $this->post(route('organizer_auth.login.post'), [
+            'email' => $organizerA->email,
+            'password' => 'password',
+        ]);
+
+        $response->assertRedirect(route('organizer.dashboard'));
+        $this->assertAuthenticatedAs($organizerA);
+    }
+
+    public function test_organizer_registration_redirects_to_organizer_dashboard()
+    {
+        $response = $this->post(route('organizer_auth.register.post'), [
+            'name' => 'Organizer Baru',
+            'email' => 'organizer.register@example.test',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response->assertRedirect(route('organizer.dashboard'));
+
+        $user = User::where('email', 'organizer.register@example.test')->first();
+        $this->assertNotNull($user);
+        $this->assertNotNull($user->organization_id);
+        $this->assertAuthenticatedAs($user);
     }
 }

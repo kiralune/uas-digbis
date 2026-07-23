@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
@@ -29,6 +29,6 @@ class TransactionController extends Controller
         }
 
         $transactions = $query->latest()->paginate(20);
-        return view('admin.transactions.index', compact('transactions'));
+        return view('organizer.transactions.index', compact('transactions'));
     }
 }

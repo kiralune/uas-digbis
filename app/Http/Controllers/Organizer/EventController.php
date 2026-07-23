@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
@@ -33,7 +33,7 @@ class EventController extends Controller
         }
 
         $events = $query->latest()->paginate(10);
-        return view('admin.events.index', compact('events'));
+        return view('organizer.events.index', compact('events'));
     }
 
     /**
@@ -42,7 +42,7 @@ class EventController extends Controller
     public function create()
     {
         $categories = \App\Models\Category::all();
-        return view('admin.events.create', compact('categories'));
+        return view('organizer.events.create', compact('categories'));
     }
 
     /**
@@ -86,7 +86,7 @@ class EventController extends Controller
 
         Event::create($data);
 
-        return redirect()->route('admin.events.index')->with('success', 'Data Event berhasil ditambahkan.');
+        return redirect()->route('organizer.events.index')->with('success', 'Data Event berhasil ditambahkan.');
 }
 
 
@@ -104,7 +104,7 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $categories = \App\Models\Category::all();
-        return view('admin.events.edit', compact('event', 'categories'));
+        return view('organizer.events.edit', compact('event', 'categories'));
     }
 
     /**
@@ -135,7 +135,7 @@ class EventController extends Controller
         }
 
         $event->update($data);
-            return redirect()->route('admin.events.index')->with('success', 'Event berhasil diperbarui.');
+            return redirect()->route('organizer.events.index')->with('success', 'Event berhasil diperbarui.');
         }
 
 
@@ -150,6 +150,6 @@ class EventController extends Controller
         }
         
         $event->delete();
-        return redirect()->route('admin.events.index')->with('success', 'Data event berhasil dihapus secara permanen.');
+        return redirect()->route('organizer.events.index')->with('success', 'Data event berhasil dihapus secara permanen.');
     }
 }

@@ -24,10 +24,10 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
-        // 1. Akun Admin Utama
+        // 1. Akun Organizer Utama
         \App\Models\User::create([
             'organization_id' => $organization->id,
-            'name' => 'Admin Amikom',
+            'name' => 'Organizer Amikom',
             'email' => 'admin@amikom.ac.id',
             'password' => bcrypt('password'),
             'role' => 'admin',

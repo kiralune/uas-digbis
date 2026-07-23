@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
@@ -18,7 +18,7 @@ class DashboardController extends Controller
         }
 
         if ($user?->role === 'organizer') {
-            return redirect()->route('admin.organizer.dashboard');
+            return redirect()->route('organizer.dashboard');
         }
 
         $organizationId = null;
@@ -46,6 +46,6 @@ class DashboardController extends Controller
         // 5. Menyertakan 5 daftar riwayat pesanan (History) paling mutakhir di panel
         $recentTransactions = (clone $transactionQuery)->with('event')->latest()->take(5)->get();
 
-        return view('admin.dashboard', compact('totalRevenue', 'ticketsSold', 'activeEvents', 'pendingOrders', 'recentTransactions'));
+        return view('organizer.dashboard', compact('totalRevenue', 'ticketsSold', 'activeEvents', 'pendingOrders', 'recentTransactions'));
     }
 }

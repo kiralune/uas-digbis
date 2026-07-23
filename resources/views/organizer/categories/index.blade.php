@@ -1,24 +1,24 @@
-@extends('layouts.admin')
-@section('title', 'Kelola Kategori - Admin')
+@extends('layouts.organizer')
+@section('title', 'Kelola Kategori - Organizer')
 @section('page_title', 'Kelola Kategori')
 @section('page_subtitle', 'Kelola kategori event AmikomEventHub Anda di sini.')
 
 @section('content')
 <div class="mb-6 flex flex-col md:flex-row gap-4 md:items-end md:justify-between">
     <div class="flex-1">
-        <form action="{{ route('admin.categories.index') }}" method="GET" class="flex gap-3">
+        <form action="{{ route('organizer.categories.index') }}" method="GET" class="flex gap-3">
             <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama kategori..." class="flex-1 px-4 py-3 rounded-lg border border-slate-300 focus:border-indigo-600 focus:ring-2 focus:ring-indigo-100 outline-none transition">
             <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700 active:scale-95 transition">
                 Cari
             </button>
             @if($search)
-            <a href="{{ route('admin.categories.index') }}" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg font-bold hover:bg-slate-300 transition">
+            <a href="{{ route('organizer.categories.index') }}" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg font-bold hover:bg-slate-300 transition">
                 Reset
             </a>
             @endif
         </form>
     </div>
-    <a href="{{ route('admin.categories.create') }}" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition">
+    <a href="{{ route('organizer.categories.create') }}" class="inline-block px-6 py-3 bg-indigo-600 text-white rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 active:scale-95 transition">
         + Tambah Kategori Baru
     </a>
 </div>
@@ -51,13 +51,13 @@
                     <td class="px-8 py-6 text-slate-600">{{ $category->slug }}</td>
                     <td class="px-8 py-6">
                         <div class="flex gap-2">
-                            <a href="{{ route('admin.categories.edit', $category->id) }}" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition">
+                            <a href="{{ route('organizer.categories.edit', $category->id) }}" class="p-2.5 bg-indigo-50 text-indigo-600 rounded-xl hover:bg-indigo-600 hover:text-white transition">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 00-2 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                                 </svg>
                             </a>
 
-                            <form action="{{ route('admin.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">
+                            <form action="{{ route('organizer.categories.destroy', $category->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus kategori ini?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="p-2.5 bg-rose-50 text-rose-600 rounded-xl hover:bg-rose-600 hover:text-white transition">
@@ -72,7 +72,7 @@
                 @empty
                 <tr>
                     <td colspan="4" class="px-8 py-12 text-center text-slate-400">
-                        Tidak ada kategori. <a href="{{ route('admin.categories.create') }}" class="text-indigo-600 hover:underline">Buat yang pertama</a>
+                        Tidak ada kategori. <a href="{{ route('organizer.categories.create') }}" class="text-indigo-600 hover:underline">Buat yang pertama</a>
                     </td>
                 </tr>
                 @endforelse

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - AmikomEventHub</title>
+    <title>Login Organizer - AmikomEventHub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style> body { font-family: 'Plus Jakarta Sans', sans-serif; } </style>
@@ -12,7 +12,7 @@
     <div class="max-w-md w-full bg-white text-slate-900 rounded-[2rem] p-8 shadow-2xl">
         <div class="text-center mb-8">
             <div class="w-16 h-16 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-bold text-2xl mx-auto mb-4">AH</div>
-            <h1 class="text-2xl font-black">Admin Login</h1>
+            <h1 class="text-2xl font-black">Login Organizer</h1>
             <p class="text-slate-500">AmikomEventHub Dashboard</p>
         </div>
 
@@ -22,7 +22,7 @@
             </div>
         @endif
 
-        <form action="{{ route('admin.login.post') }}" method="POST" class="space-y-6">
+        <form action="{{ route('organizer_auth.login.post') }}" method="POST" class="space-y-6">
             @csrf
             <div>
                 <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Email</label>
@@ -54,7 +54,7 @@
 </a>
         </form>
         <div class="text-center mt-6">
-            <p class="text-sm text-slate-500">Belum punya organisasi? <a href="{{ route('admin.register') }}" class="font-bold text-indigo-600 hover:text-indigo-700">Daftar sekarang</a></p>
+            <p class="text-sm text-slate-500">Belum punya organisasi? <a href="{{ route('organizer_auth.register') }}" class="font-bold text-indigo-600 hover:text-indigo-700">Daftar sekarang</a></p>
         </div>
     </div>
 </body>

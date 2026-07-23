@@ -14,6 +14,9 @@ class EventController extends Controller
 
     public function show(\App\Models\Event $event)
     {
+        // Muat relasi yang dibutuhkan oleh halaman detail event
+        $event->load(['category', 'organization']);
+
         // Mengambil daftar kategori untuk keperluan menu footer
         $categories = \App\Models\Category::all();
     

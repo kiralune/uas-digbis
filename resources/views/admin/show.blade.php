@@ -32,7 +32,7 @@
     <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @forelse($events as $event)
             <div class="bg-white rounded-3xl border border-slate-100 shadow-sm overflow-hidden hover:shadow-2xl transition">
-                <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path)) ? asset('storage/' . $event->poster_path) : 'https://placehold.co/400x600' }}" alt="{{ $event->title }}" class="w-full h-72 object-cover">
+                <img src="{{ $event->poster_url }}" alt="{{ $event->title }}" class="w-full h-72 object-cover">
                 <div class="p-6">
                     <span class="inline-flex px-3 py-1 rounded-full bg-indigo-100 text-indigo-700 text-xs font-bold uppercase tracking-[0.2em]">{{ $event->category->name }}</span>
                     <h2 class="mt-4 text-2xl font-black text-slate-900">{{ $event->title }}</h2>

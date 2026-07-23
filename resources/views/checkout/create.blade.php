@@ -1,4 +1,5 @@
- @extends('layouts.app')
+ @extends('layouts.app') 
+@section('hideNav', true)
  @section('title', 'Checkout - ' . $event->title)
  @section('content')
  <main class="max-w-3xl mx-auto px-6 py-20">
@@ -36,9 +37,7 @@
          <div class="bg-white rounded-3xl border border-slate-200 p-8 shadow-sm">
              <h3 class="text-xl font-bold mb-6 border-b pb-4">Pesanan Anda</h3>
              <div class="flex gap-6 items-start">
-                 <img src="{{ ($event->poster_path && Storage::disk('public')->exists($event->poster_path))
-                  ? asset('storage/' . $event->poster_path)
-                  : 'https://placehold.co/200x200' }}"
+                 <img src="{{ $event->poster_url }}"
                      alt="Event" class="w-24 h-24 rounded-2xl object-cover">
                  <div>
                      <h4 class="font-extrabold text-lg">{{ $event->title }}</h4>

@@ -31,9 +31,43 @@
                 <span class="text-xl font-bold tracking-tight">amikomeventhub</span>
             </div>
             <div class="hidden md:flex items-center gap-8 font-medium">
-                <a href="{{ route('home') }}" class="text-indigo-600">Jelajahi</a>
-                <a href="#" class="hover:text-indigo-600 transition">Kategori</a>
-                <a href="#" class="hover:text-indigo-600 transition">Tentang Kami</a>
+                <a href="{{ route('home') }}" class="text-indigo-600">Beranda</a>
+                <div class="relative group">
+                    <a href="{{ route('home') }}#events"
+                        class="inline-flex items-center gap-1 hover:text-indigo-600 transition"
+                        aria-haspopup="true">
+                        Event
+
+                        <svg class="w-4 h-4 transition-transform duration-200 group-hover:rotate-180"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                stroke-width="2" d="m6 9 6 6 6-6" />
+                        </svg>
+                    </a>
+
+                    <div class="absolute left-1/2 top-full z-50 hidden w-60 -translate-x-1/2 pt-4 group-hover:block group-focus-within:block">
+                        <div class="overflow-hidden rounded-2xl border border-slate-100 bg-white p-2 shadow-xl shadow-slate-200/70">
+                            <a href="{{ route('home') }}#events"
+                                class="block rounded-xl px-4 py-3 text-sm font-semibold text-indigo-600 hover:bg-indigo-50 transition">
+                                Semua Event
+                            </a>
+
+                            @isset($categories)
+                                @foreach($categories as $cat)
+                                    <a href="{{ route('home') }}?category={{ $cat->slug }}#events"
+                                        class="block rounded-xl px-4 py-3 text-sm text-slate-600 hover:bg-slate-50 hover:text-indigo-600 transition">
+                                        {{ $cat->name }}
+                                    </a>
+                                @endforeach
+                            @else
+                                <p class="px-4 py-3 text-sm text-slate-400">
+                                    Kategori belum tersedia.
+                                </p>
+                            @endisset
+                        </div>
+                    </div>
+                </div>
+                <a href="{{ route('home') }}#partner" class="hover:text-indigo-600 transition">Tentang Kami</a>
             </div>
             <div class="flex items-center gap-3">
                 @guest
@@ -53,6 +87,7 @@
 
     @yield('content')
 
+    @if(!View::hasSection('hideFooter'))
     <!-- Footer -->
     <footer class="bg-indigo-900 text-indigo-100 py-20 px-6 mt-20">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -84,9 +119,9 @@
             <div>
                 <h4 class="text-white font-bold mb-4">Navigasi</h4>
                 <ul class="space-y-4">
-                    <li><a href="#" class="hover:text-white transition">Home</a></li>
-                    <li><a href="#" class="hover:text-white transition">Semua Event</a></li>
-                    <li><a href="#" class="hover:text-white transition">Cara Bayar</a></li>
+                    <li><a href="{{ route('home') }}" class="hover:text-white transition">Beranda</a></li>
+                    <li><a href="{{ route('home') }}#event" class="hover:text-white transition">Event</a></li>
+                    <li><a href="{{ route('home') }}#partner" class="hover:text-white transition">Tentang Kami</a></li>
                 </ul>
             </div>
             <div>
@@ -101,6 +136,7 @@
             &copy; 2024 AmikomEventHub. Built with Laravel & Tailwind CSS.
         </div>
     </footer>
+    @endif
 
 </body>
 

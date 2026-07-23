@@ -1,12 +1,12 @@
-@extends('layouts.admin')
-@section('title', 'Edit Kategori - Admin')
+@extends('layouts.organizer')
+@section('title', 'Edit Kategori - Organizer')
 @section('page_title', 'Edit Kategori')
 @section('page_subtitle', 'Perbarui data kategori event.')
 
 @section('content')
 <div class="max-w-2xl">
     <div class="bg-white rounded-[2.5rem] border border-slate-100 shadow-sm p-8">
-        <form action="{{ route('admin.categories.update', $category->id) }}" method="POST" class="space-y-6">
+        <form action="{{ route('organizer.categories.update', $category->id) }}" method="POST" class="space-y-6">
             @csrf
             @method('PUT')
 
@@ -28,7 +28,7 @@
                 <button type="submit" class="px-6 py-3 bg-indigo-600 text-white rounded-lg font-bold hover:bg-indigo-700 active:scale-95 transition">
                     Simpan Perubahan
                 </button>
-                <a href="{{ route('admin.categories.index') }}" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg font-bold hover:bg-slate-300 transition">
+                <a href="{{ route('organizer.categories.index') }}" class="px-6 py-3 bg-slate-200 text-slate-700 rounded-lg font-bold hover:bg-slate-300 transition">
                     Batal
                 </a>
             </div>
