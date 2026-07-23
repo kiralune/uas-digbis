@@ -28,7 +28,7 @@
             class="glass sticky top-8 z-40 mx-4 mt-4 px-6 py-4 rounded-2xl border border-white/20 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-indigo-600 rounded-xl flex items-center justify-center text-white font-bold text-xl">A</div>
-                <span class="text-xl font-bold tracking-tight">amikomeventhub</span>
+                <span class="text-xl font-bold tracking-tight">AmikomEventHub</span>
             </div>
             <div class="hidden md:flex items-center gap-8 font-medium">
                 <a href="{{ route('home') }}" class="text-indigo-600">Beranda</a>

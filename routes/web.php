@@ -49,8 +49,20 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/organizers/{organization}/verify', [AdminController::class, 'verifyOrganizer'])->name('organizers.verify');
         Route::get('/events', [AdminController::class, 'events'])->name('events.index');
         Route::get('/transactions', [AdminController::class, 'transactions'])->name('transactions.index');
+
         Route::get('/partners', [AdminController::class, 'partners'])->name('partners.index');
+        Route::get('/partners/create', [AdminController::class, 'createPartner'])->name('partners.create');
+        Route::post('/partners', [AdminController::class, 'storePartner'])->name('partners.store');
+        Route::get('/partners/{partner}/edit', [AdminController::class, 'editPartner'])->name('partners.edit');
+        Route::put('/partners/{partner}', [AdminController::class, 'updatePartner'])->name('partners.update');
+        Route::delete('/partners/{partner}', [AdminController::class, 'destroyPartner'])->name('partners.destroy');
+
         Route::get('/categories', [AdminController::class, 'categories'])->name('categories.index');
+        Route::get('/categories/create', [AdminController::class, 'createCategory'])->name('categories.create');
+        Route::post('/categories', [AdminController::class, 'storeCategory'])->name('categories.store');
+        Route::get('/categories/{category}/edit', [AdminController::class, 'editCategory'])->name('categories.edit');
+        Route::put('/categories/{category}', [AdminController::class, 'updateCategory'])->name('categories.update');
+        Route::delete('/categories/{category}', [AdminController::class, 'destroyCategory'])->name('categories.destroy');
     });
 });
 
@@ -66,8 +78,6 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('home');
         Route::get('dashboard', [OrganizerDashboardController::class, 'index'])->name('dashboard');
         Route::resource('events', EventOrganizerController::class);
-        Route::resource('partners', \App\Http\Controllers\PartnerController::class);
-        Route::resource('categories', CategoryController::class)->except('show');
         Route::get('transactions', [\App\Http\Controllers\Organizer\TransactionController::class, 'index'])->name('transactions.index');
     });
 });

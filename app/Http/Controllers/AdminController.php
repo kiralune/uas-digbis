@@ -9,6 +9,8 @@ use App\Models\Partners;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AdminController extends Controller
 {
@@ -131,6 +133,74 @@ class AdminController extends Controller
         return view('admin.partners.index', compact('partners'));
     }
 
+    public function createPartner()
+    {
+        $this->ensureSuperAdmin();
+
+        return view('admin.partners.create');
+    }
+
+    public function storePartner(Request $request)
+    {
+        $this->ensureSuperAdmin();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $logoPath = $request->file('logo')->store('partners', 'public');
+
+        Partners::create([
+            'name' => $validated['name'],
+            'logo_url' => $logoPath,
+        ]);
+
+        return redirect()->route('admin.partners.index')->with('success', 'Partner berhasil ditambahkan.');
+    }
+
+    public function editPartner(Partners $partner)
+    {
+        $this->ensureSuperAdmin();
+
+        return view('admin.partners.edit', compact('partner'));
+    }
+
+    public function updatePartner(Request $request, Partners $partner)
+    {
+        $this->ensureSuperAdmin();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $data = [
+            'name' => $validated['name'],
+        ];
+
+        if ($request->hasFile('logo')) {
+            if ($partner->logo_url && Storage::disk('public')->exists($partner->logo_url)) {
+                Storage::disk('public')->delete($partner->logo_url);
+            }
+
+            $data['logo_url'] = $request->file('logo')->store('partners', 'public');
+        }
+
+        $partner->update($data);
+
+        return redirect()->route('admin.partners.index')->with('success', 'Partner berhasil diperbarui.');
+    }
+
+    public function destroyPartner(Partners $partner)
+    {
+        $this->ensureSuperAdmin();
+
+        $partner->delete();
+
+        return redirect()->route('admin.partners.index')->with('success', 'Partner berhasil dihapus.');
+    }
+
     public function categories()
     {
         $this->ensureSuperAdmin();
@@ -138,5 +208,58 @@ class AdminController extends Controller
         $categories = Category::withCount('events')->latest()->get();
 
         return view('admin.categories.index', compact('categories'));
+    }
+
+    public function createCategory()
+    {
+        $this->ensureSuperAdmin();
+
+        return view('admin.categories.create');
+    }
+
+    public function storeCategory(Request $request)
+    {
+        $this->ensureSuperAdmin();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $validated['slug'] = Str::slug($validated['name']);
+
+        Category::create($validated);
+
+        return redirect()->route('admin.categories.index')->with('success', 'Kategori event berhasil ditambahkan.');
+    }
+
+    public function editCategory(Category $category)
+    {
+        $this->ensureSuperAdmin();
+
+        return view('admin.categories.edit', compact('category'));
+    }
+
+    public function updateCategory(Request $request, Category $category)
+    {
+        $this->ensureSuperAdmin();
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $validated['slug'] = Str::slug($validated['name']);
+
+        $category->update($validated);
+
+        return redirect()->route('admin.categories.index')->with('success', 'Kategori event berhasil diperbarui.');
+    }
+
+    public function destroyCategory(Category $category)
+    {
+        $this->ensureSuperAdmin();
+
+        $category->delete();
+
+        return redirect()->route('admin.categories.index')->with('success', 'Kategori event berhasil dihapus.');
     }
 }
