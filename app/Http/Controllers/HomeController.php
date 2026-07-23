@@ -16,9 +16,12 @@ class HomeController extends Controller
 
         // 2. Buat kueri dasar untuk mengambil event: 
         // - Gunakan Eager loading `category` dan `organization`
-        // - Hanya tampilkan kegiatan dengan jadwal yang belum kedaluwarsa (>= hari ini)
+        // - Hanya tampilkan kegiatan yang punya organisasi valid dan jadwal yang belum kedaluwarsa (>= hari ini)
         $query = Event::with(['category', 'organization'])
                       ->where('date', '>=', now())
+                      ->whereNotNull('organization_id')
+                      ->whereHas('organization')
+                      ->where('title', '!=', 'UI/UX')
                       ->orderBy('date', 'asc');
 
         // 3. Filter query jika url memiliki parameter pencarian spesifik ?category=...
