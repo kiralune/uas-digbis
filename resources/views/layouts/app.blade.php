@@ -96,7 +96,7 @@
                 <h4 class="text-white font-bold mb-4">Navigasi</h4>
                 <ul class="space-y-4">
                     <li><a href="{{ route('home') }}" class="hover:text-white transition">Beranda</a></li>
-                    <li><a href="{{ route('home') }}#event" class="hover:text-white transition">Event</a></li>
+                    <li><a href="{{ route('home') }}#events" class="hover:text-white transition">Event</a></li>
                     <li><a href="{{ route('home') }}#partner" class="hover:text-white transition">Tentang Kami</a></li>
                 </ul>
             </div>

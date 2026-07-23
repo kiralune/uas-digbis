@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'Organizer Amikom',
             'email' => 'admin@amikom.ac.id',
             'password' => bcrypt('password'),
-            'role' => 'admin',
+            'role' => 'superadmin',
         ]);
             
         // 2. Insert Kategori Event
