@@ -11,13 +11,8 @@ use App\Http\Controllers\Organizer\EventController as EventOrganizerController;
 use App\Http\Controllers\Organizer\CategoryController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicAuthController;
-<<<<<<< HEAD
 use App\Http\Controllers\ReviewController;
-=======
 use App\Http\Controllers\AdminController;
-
-
->>>>>>> 23f45d2984f35ff8665f9f929955f4237fe58b5d
 
 // Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -40,10 +35,6 @@ Route::get('/review/{transaction:order_id}', [ReviewController::class, 'create']
 Route::post('/review/{transaction:order_id}', [ReviewController::class, 'store'])->name('reviews.store');
 Route::get('/review/{transaction:order_id}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
 Route::patch('/review/{transaction:order_id}', [ReviewController::class, 'update'])->name('reviews.update');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/my-reviews', [ReviewController::class, 'index'])->name('reviews.index');
-});
 
 // Rute publik auth untuk End User
 Route::get('/login', [PublicAuthController::class, 'showLoginUser'])->name('login');

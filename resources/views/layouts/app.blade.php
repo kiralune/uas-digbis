@@ -36,7 +36,7 @@
             </div>
             <div class="hidden md:flex items-center gap-8 font-medium">
                 <a href="{{ route('home') }}" class="{{ $homeActive ? 'text-indigo-600' : 'hover:text-indigo-600 transition' }}">Jelajahi</a>
-                <a href="{{ session('ticket_order_id') ? route('ticket', ['order_id' => session('ticket_order_id')]) : (auth()->check() ? route('ticket', ['email' => auth()->user()->email]) : route('ticket')) }}" class="{{ $ticketActive ? 'text-indigo-600' : 'hover:text-indigo-600 transition' }}">Tiket Saya</a>
+                <a href="{{ route('ticket') }}" class="{{ $ticketActive ? 'text-indigo-600' : 'hover:text-indigo-600 transition' }}">Tiket Saya</a>
                 @auth
                     <a href="{{ route('reviews.index') }}" class="hover:text-indigo-600 transition">Review Saya</a>
                 @endauth
