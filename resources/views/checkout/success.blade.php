@@ -13,9 +13,14 @@
             Pembayaran untuk pesanan <strong>{{ $transaction->order_id }}</strong> sedang diproses atau telah berhasil. 
             E-Ticket akan dikirim ke email Anda (<strong>{{ $transaction->customer_email }}</strong>) setelah pembayaran terkonfirmasi lunas.
         </p>
-        <a href="{{ route('home') }}" class="inline-block px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition">
-            Kembali ke Beranda
-        </a>
+        <div class="flex flex-col gap-3">
+            <a href="{{ route('ticket', ['email' => $transaction->customer_email]) }}" class="inline-block px-8 py-4 bg-indigo-600 text-white rounded-xl font-bold hover:bg-indigo-700 transition">
+                Lihat Tiket Saya
+            </a>
+            <a href="{{ route('home') }}" class="inline-block px-8 py-4 bg-slate-100 text-slate-700 rounded-xl font-bold hover:bg-slate-200 transition">
+                Kembali ke Beranda
+            </a>
+        </div>
     </div>
 </main>
 @endsection

@@ -24,7 +24,8 @@ class EventController extends Controller
     public function create()
     {
         $categories = \App\Models\Category::all();
-        return view('admin.events.create', compact('categories'));
+        $partners = \App\Models\Partners::all();
+        return view('admin.events.create', compact('categories', 'partners'));
     }
 
     /**
@@ -35,6 +36,7 @@ class EventController extends Controller
         // Menerapkan validasi data request dari pengguna
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'partner_id' => 'required|exists:partners,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'date' => 'required|date',
@@ -70,7 +72,8 @@ class EventController extends Controller
     public function edit(Event $event)
     {
         $categories = \App\Models\Category::all();
-        return view('admin.events.edit', compact('event', 'categories'));
+        $partners = \App\Models\Partners::all();
+        return view('admin.events.edit', compact('event', 'categories', 'partners'));
     }
 
     /**
@@ -80,6 +83,7 @@ class EventController extends Controller
     {
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
+            'partner_id' => 'required|exists:partners,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',

@@ -23,6 +23,10 @@
 <body class="bg-slate-50 text-slate-900">
 
     @unless(View::hasSection('hideNav'))
+        @php
+            $homeActive = request()->routeIs('home');
+            $ticketActive = request()->routeIs('ticket');
+        @endphp
         <!-- Navigation -->
         <nav
             class="glass sticky top-8 z-40 mx-4 mt-4 px-6 py-4 rounded-2xl border border-white/20 shadow-lg flex flex-col md:flex-row items-center justify-between gap-4">
@@ -31,7 +35,8 @@
                 <span class="text-xl font-bold tracking-tight">amikomeventhub</span>
             </div>
             <div class="hidden md:flex items-center gap-8 font-medium">
-                <a href="{{ route('home') }}" class="text-indigo-600">Jelajahi</a>
+                <a href="{{ route('home') }}" class="{{ $homeActive ? 'text-indigo-600' : 'hover:text-indigo-600 transition' }}">Jelajahi</a>
+                <a href="{{ session('ticket_order_id') ? route('ticket', ['order_id' => session('ticket_order_id')]) : (auth()->check() ? route('ticket', ['email' => auth()->user()->email]) : route('ticket')) }}" class="{{ $ticketActive ? 'text-indigo-600' : 'hover:text-indigo-600 transition' }}">Tiket Saya</a>
                 <a href="#" class="hover:text-indigo-600 transition">Kategori</a>
                 <a href="#" class="hover:text-indigo-600 transition">Tentang Kami</a>
             </div>
@@ -41,11 +46,13 @@
                     <a href="{{ route('register') }}"
                        class="px-5 py-2.5 bg-indigo-600 text-white rounded-xl font-semibold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Daftar</a>
                 @else
-                    <span class="text-sm text-slate-600">Halo, {{ auth()->user()->name }}</span>
-                    <form action="{{ route('logout') }}" method="POST" class="inline">
-                        @csrf
-                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-900 font-semibold hover:bg-slate-200 transition">Logout</button>
-                    </form>
+                    <div class="flex items-center gap-3">
+                        <a href="{{ route('profile') }}" class="px-5 py-2.5 rounded-xl bg-indigo-600 text-white font-semibold hover:bg-indigo-700 transition">Profil</a>
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-900 font-semibold hover:bg-slate-200 transition">Logout</button>
+                        </form>
+                    </div>
                 @endguest
             </div>
         </nav>

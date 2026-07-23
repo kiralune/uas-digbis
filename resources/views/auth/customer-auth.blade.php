@@ -39,7 +39,7 @@
                 <a href="{{ url('/auth/google?redirect_to=' . route('home')) }}"
                    class="w-full inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white py-4 text-slate-900 font-semibold hover:bg-slate-50 transition">
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5">
-                    Masuk dengan Google
+                    Continue with Google
                 </a>
                 <form id="login-form" action="{{ route('login.post') }}" method="POST" class="space-y-5 mt-2">
                     @csrf

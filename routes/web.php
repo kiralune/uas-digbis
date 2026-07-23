@@ -9,8 +9,8 @@ use App\Http\Controllers\Admin\EventController as EventAdminController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\PublicAuthController;
-
-
+use App\Http\Controllers\OrganizerController;
+use App\Http\Controllers\ReviewController;
 
 // Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -19,6 +19,11 @@ Route::get('/checkout/{event}', [App\Http\Controllers\CheckoutController::class,
 Route::post('/checkout/{event}', [App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout', [EventController::class,'checkout'])->name('checkout');
 Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
+Route::get('/organizers/{partner}', [OrganizerController::class, 'show'])->name('organizers.show');
+Route::get('/review/{transaction:order_id}', [ReviewController::class, 'create'])->name('reviews.create');
+Route::post('/review/{transaction:order_id}', [ReviewController::class, 'store'])->name('reviews.store');
+Route::get('/review/{transaction:order_id}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
+Route::patch('/review/{transaction:order_id}', [ReviewController::class, 'update'])->name('reviews.update');
 
 // Rute publik auth untuk End User
 Route::get('/login', [PublicAuthController::class, 'showLoginUser'])->name('login');
@@ -33,6 +38,9 @@ Route::get('/register/organizer', [PublicAuthController::class, 'showRegisterOrg
 Route::post('/register/organizer', [PublicAuthController::class, 'registerOrganizer'])->name('organizer.register.post');
 
 Route::post('/logout', [PublicAuthController::class, 'logout'])->name('logout');
+Route::get('/profile', function () {
+    return view('profile');
+})->middleware('auth')->name('profile');
 
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('login', [AuthController::class, 'showLogin'])->name('login');

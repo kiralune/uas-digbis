@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
@@ -16,6 +17,7 @@ class EventController extends Controller
     {
         // Mengambil daftar kategori untuk keperluan menu footer
         $categories = \App\Models\Category::all();
+        $event->load('partner');
     
         // Me-render view dengan membawa data kategori dan data spesifik acara tersebut
         return view('event-detail', compact('categories', 'event'));
@@ -25,7 +27,13 @@ class EventController extends Controller
         return view('checkout');
     }
 
-    function ticket(){
-        return view('ticket');
+    function ticket(Request $request){
+        $categories = \App\Models\Category::all();
+
+        $transactions = Transaction::with(['event.partner', 'review'])
+            ->latest()
+            ->get();
+
+        return view('ticket', compact('categories', 'transactions'));
     }
 }
