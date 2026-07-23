@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('hideNav', true)
+@section('hideFooter', true)
 
 @section('content')
 <main class="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-10">
@@ -16,16 +17,6 @@
                 </div>
                 <h1 class="text-4xl md:text-5xl font-black text-slate-900 leading-tight">Nikmati kemudahan transaksi yang cepat, aman, dan tanpa ribet.</h1>
                 <p class="mt-6 text-slate-500 leading-8">Bayar tiket dengan mudah, kelola event, dan dapatkan seluruh update penjualan dalam satu platform terpadu.</p>
-                <div class="mt-10 grid gap-4">
-                    <div class="rounded-3xl bg-indigo-50 p-6">
-                        <h2 class="font-semibold text-indigo-700 text-lg">Mudah untuk event organizer</h2>
-                        <p class="mt-2 text-slate-600">Kelola tiket dan laporan penjualan dengan cepat.</p>
-                    </div>
-                    <div class="rounded-3xl bg-slate-50 p-6">
-                        <h2 class="font-semibold text-slate-900 text-lg">Nyaman untuk penonton</h2>
-                        <p class="mt-2 text-slate-600">Beli tiket tanpa repot dan checkout langsung.</p>
-                    </div>
-                </div>
             </div>
         </section>
 
@@ -41,6 +32,12 @@
                     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5">
                     Continue with Google
                 </a>
+
+                <div class="flex items-center gap-4 py-1 text-sm font-medium text-slate-400">
+                    <span class="h-px flex-1 bg-slate-200"></span>
+                    <span>atau</span>
+                    <span class="h-px flex-1 bg-slate-200"></span>
+                </div>
                 <form id="login-form" action="{{ route('login.post') }}" method="POST" class="space-y-5 mt-2">
                     @csrf
                     <div>
@@ -57,53 +54,62 @@
                                required>
                         @error('password')<p class="mt-2 text-sm text-rose-500">{{ $message }}</p>@enderror
                     </div>
-                    <button type="submit"
+                    <button id="login-submit-btn" type="submit"
                             class="w-full rounded-2xl bg-indigo-600 py-4 text-white font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Login dengan Email</button>
                 </form>
             </div>
 
             <div id="panel-register" class="hidden space-y-5">
-                <form action="{{ route('register.post') }}" method="POST" class="space-y-5">
+                <form action="{{ route('register.post') }}" method="POST" class="space-y-5 mt-2">
                     @csrf
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-2">Nama Lengkap</label>
-                        <input type="text" name="name" value="{{ old('name') }}"
+                        <input type="text" name="name" value="{{ old('name') }}" placeholder="Nama Anda"
                                class="w-full rounded-2xl border border-slate-200 px-5 py-4 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
                                required>
                         @error('name')<p class="mt-2 text-sm text-rose-500">{{ $message }}</p>@enderror
                     </div>
                     <div>
                         <label class="block text-sm font-semibold text-slate-700 mb-2">Email</label>
-                        <input type="email" name="email" value="{{ old('email') }}"
+                        <input type="email" name="email" value="{{ old('email') }}" placeholder="nama@contoh.com"
                                class="w-full rounded-2xl border border-slate-200 px-5 py-4 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
                                required>
                         @error('email')<p class="mt-2 text-sm text-rose-500">{{ $message }}</p>@enderror
                     </div>
-                    <div class="grid gap-6 md:grid-cols-2">
+                    <div class="grid gap-5 md:grid-cols-2">
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Password</label>
-                            <input type="password" name="password"
+                            <input type="password" name="password" placeholder="••••••••"
                                    class="w-full rounded-2xl border border-slate-200 px-5 py-4 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
                                    required>
                             @error('password')<p class="mt-2 text-sm text-rose-500">{{ $message }}</p>@enderror
                         </div>
                         <div>
                             <label class="block text-sm font-semibold text-slate-700 mb-2">Konfirmasi Password</label>
-                            <input type="password" name="password_confirmation"
+                            <input type="password" name="password_confirmation" placeholder="••••••••"
                                    class="w-full rounded-2xl border border-slate-200 px-5 py-4 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
                                    required>
                         </div>
                     </div>
-                    <button type="submit"
+                    <button id="register-submit-btn" type="submit"
                             class="w-full rounded-2xl bg-indigo-600 py-4 text-white font-bold shadow-lg shadow-indigo-200 hover:bg-indigo-700 transition">Daftar dengan Email</button>
                 </form>
             </div>
 
-            <div class="mt-6 border-t border-slate-200 pt-5 text-center text-slate-500 text-sm">
-                Kamu penyelenggara event? <a id="partner-link" href="{{ route('organizer.login') }}" class="text-indigo-600 font-semibold">Masuk sebagai Event Partner</a>
+            <div class="pt-7">
+                <div class="flex items-center gap-4 text-sm font-semibold text-slate-700">
+                    <span class="h-px flex-1 bg-slate-400"></span>
+                    <span>Kamu Organizer Event?</span>
+                    <span class="h-px flex-1 bg-slate-400"></span>
+                </div>
+
+                <a id="partner-link" href="{{ route('organizer_auth.login') }}"
+                    class="mt-5 w-full inline-flex items-center justify-center rounded-2xl border-2 border-indigo-100 bg-indigo-50 py-3.5 font-semibold text-indigo-700 hover:border-indigo-200 hover:bg-indigo-100 transition">
+                    Login Sebagai Organizer
+                </a>
             </div>
         </section>
-    </div>
+
 </main>
 
 <script>
@@ -113,21 +119,28 @@
     const panelLogin = document.getElementById('panel-login');
     const panelRegister = document.getElementById('panel-register');
     const partnerLink = document.getElementById('partner-link');
+    const loginSubmitBtn = document.getElementById('login-submit-btn');
+    const registerSubmitBtn = document.getElementById('register-submit-btn');
+
     function setTab(tab) {
         if (tab === 'register') {
             loginTab.className = 'flex-1 rounded-3xl px-5 py-3 font-semibold text-slate-500 bg-transparent';
             registerTab.className = 'flex-1 rounded-3xl px-5 py-3 font-semibold text-slate-900 bg-white shadow-sm';
             panelLogin.classList.add('hidden');
             panelRegister.classList.remove('hidden');
-            partnerLink.href = '{{ route('organizer.register') }}';
-            partnerLink.textContent = 'Daftar Event Partner';
+            partnerLink.href = '{{ route('organizer_auth.register') }}';
+            partnerLink.textContent = 'Daftar Sebagai Organizer';
+            loginSubmitBtn?.classList.add('hidden');
+            registerSubmitBtn?.classList.remove('hidden');
         } else {
             loginTab.className = 'flex-1 rounded-3xl px-5 py-3 font-semibold text-slate-900 bg-white shadow-sm';
             registerTab.className = 'flex-1 rounded-3xl px-5 py-3 font-semibold text-slate-500 bg-transparent';
             panelLogin.classList.remove('hidden');
             panelRegister.classList.add('hidden');
-            partnerLink.href = '{{ route('organizer.login') }}';
-            partnerLink.textContent = 'Masuk sebagai Event Partner';
+            partnerLink.href = '{{ route('organizer_auth.login') }}';
+            partnerLink.textContent = 'Masuk sebagai Organizer';
+            loginSubmitBtn?.classList.remove('hidden');
+            registerSubmitBtn?.classList.add('hidden');
         }
     }
 

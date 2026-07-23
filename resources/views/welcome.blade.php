@@ -2,6 +2,32 @@
 
 @section('content')
 
+<style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .partner-track {
+        animation: partner-slide 28s linear infinite;
+    }
+
+    @keyframes partner-slide {
+        from {
+            transform: translateX(0%);
+        }
+
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .partner-track {
+            animation: none;
+        }
+    }
+</style>
+
    <!-- Hero Section -->
     <section class="max-w-7xl mx-auto px-6 py-20 flex flex-col md:flex-row items-center gap-12">
         <div class="flex-1 space-y-8">
@@ -67,7 +93,7 @@
     </div>
 
     <!-- Events Grid -->
-    <section id="events" class="max-w-7xl mx-auto px-6 py-20">
+    <section id="events" class="max-w-7xl mx-auto px-6 py-20 scroll-mt-8">
         <!-- Zona Menampilkan Grid List Event -->
  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         @foreach($events as $event)
@@ -88,16 +114,24 @@
             </div>
             <div class="p-6">
                 <h3 class="text-xl font-bold mb-2 group-hover:text-indigo-600 transition">{{ $event->title }}</h3>
-                <div class="flex items-center gap-2 text-slate-500 text-sm mb-4">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span>{{ \Carbon\Carbon::parse($event->date)->format('d-m-Y H:i') }}</span>
+                <div class="flex flex-col gap-2 text-slate-500 text-sm mb-4">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span>{{ \Carbon\Carbon::parse($event->date)->format('d-m-Y H:i') }}</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A10.966 10.966 0 0112 15c2.4 0 4.62.86 6.328 2.304M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                        <span>Penyelenggara: {{ $event->organization->name ?? 'Independent' }}</span>
+                    </div>
                 </div>
                 <div class="flex justify-between items-center pt-4 border-t">
                     <span class="text-2xl font-black text-indigo-600">Rp {{ number_format($event->price, 0, ',', '.') }}</span>
-                    <a href="{{ route('events.show', $event->id) }}" class="px-5 py-2 bg-indigo-50 text-indigo-600 rounded-xl font-bold hover:bg-indigo-600 hover:text-white transition">Lihat Detail</a>
+                    <a href="{{ $soldOut ? '#' : route('events.show', $event->id) }}" class="px-5 py-2 rounded-xl font-bold transition {{ $soldOut ? 'bg-slate-200 text-slate-500 cursor-not-allowed pointer-events-none' : 'bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white' }}">{{ $soldOut ? 'Habis' : 'Lihat Detail' }}</a>
                 </div>
             </div>
         </div>
@@ -105,31 +139,45 @@
     </section>
 
     <!-- Partners Section -->
-    <section class="max-w-7xl mx-auto px-6 py-20 bg-gradient-to-b from-slate-50 to-white rounded-3xl">
-        <div class="text-center mb-16">
-            <h2 class="text-4xl md:text-5xl font-black mb-4">
-                Dipercaya oleh <span class="text-indigo-600">Partner Terkemuka</span>
-            </h2>
-            <p class="text-lg text-slate-500 max-w-2xl mx-auto">
-                AmikomEventHub berkolaborasi dengan berbagai perusahaan dan organisasi terkemuka untuk memberikan pengalaman event terbaik.
-            </p>
-        </div>
+    <section id="partner" class="max-w-7xl mx-auto px-6 py-20 scroll-mt-8 bg-gradient-to-b from-slate-50 to-white rounded-3xl">
+    <div class="text-center mb-16">
+        <h2 class="text-4xl md:text-5xl font-black mb-4">
+            Dipercaya oleh <span class="text-indigo-600">Partner Terkemuka</span>
+        </h2>
+
+        <p class="text-lg text-slate-500 max-w-2xl mx-auto">
+            AmikomEventHub berkolaborasi dengan berbagai perusahaan dan organisasi terkemuka untuk memberikan pengalaman event terbaik.
+        </p>
+    </div>
 
         @if($partners->count() > 0)
-        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 items-center justify-items-center">
-            @foreach($partners as $partner)
-            <div class="group p-6 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-lg bg-white transition-all duration-300 flex items-center justify-center h-40 w-full">
-                <img src="{{ $partner->logo_url }}" alt="{{ $partner->name }}" 
-                    class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300"
-                    title="{{ $partner->name }}">
+        <div class="overflow-hidden">
+            <div class="partner-track flex w-max gap-6 py-2">
+                @foreach($partners as $partner)
+                    <div class="group p-6 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-lg bg-white transition-all duration-300 flex items-center justify-center h-40 w-56 shrink-0">
+                        <img src="{{ $partner->logo_url }}"
+                            alt="{{ $partner->name }}"
+                            title="{{ $partner->name }}"
+                            class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                @endforeach
+
+                {{-- Duplikat logo agar animasi berulang tanpa jeda --}}
+                @foreach($partners as $partner)
+                    <div aria-hidden="true"
+                        class="group p-6 rounded-2xl border border-slate-200 hover:border-indigo-400 hover:shadow-lg bg-white transition-all duration-300 flex items-center justify-center h-40 w-56 shrink-0">
+                        <img src="{{ $partner->logo_url }}"
+                            alt=""
+                            class="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-300">
+                    </div>
+                @endforeach
             </div>
-            @endforeach
         </div>
-        @else
+    @else
         <div class="text-center py-12 bg-slate-100 rounded-2xl">
             <p class="text-slate-500">Belum ada partner yang terdaftar.</p>
         </div>
-        @endif
+    @endif
     </section>
 
     <!-- Kategori Section -->

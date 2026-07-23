@@ -60,6 +60,7 @@
 
     @yield('content')
 
+    @if(!View::hasSection('hideFooter'))
     <!-- Footer -->
     <footer class="bg-indigo-900 text-indigo-100 py-20 px-6 mt-20">
         <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
@@ -91,9 +92,9 @@
             <div>
                 <h4 class="text-white font-bold mb-4">Navigasi</h4>
                 <ul class="space-y-4">
-                    <li><a href="#" class="hover:text-white transition">Home</a></li>
-                    <li><a href="#" class="hover:text-white transition">Semua Event</a></li>
-                    <li><a href="#" class="hover:text-white transition">Cara Bayar</a></li>
+                    <li><a href="{{ route('home') }}" class="hover:text-white transition">Beranda</a></li>
+                    <li><a href="{{ route('home') }}#event" class="hover:text-white transition">Event</a></li>
+                    <li><a href="{{ route('home') }}#partner" class="hover:text-white transition">Tentang Kami</a></li>
                 </ul>
             </div>
             <div>
@@ -108,6 +109,7 @@
             &copy; 2024 AmikomEventHub. Built with Laravel & Tailwind CSS.
         </div>
     </footer>
+    @endif
 
 </body>
 

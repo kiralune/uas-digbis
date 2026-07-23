@@ -17,12 +17,12 @@ class PartnerController extends Controller
             $partners = Partners::all();
         }
         
-        return view('admin.partners.index', compact('partners', 'search'));
+        return view('organizer.partners.index', compact('partners', 'search'));
     }
 
     public function create()
     {
-        return view('admin.partners.create');
+        return view('organizer.partners.create');
     }
 
     public function store(Request $request)
@@ -34,12 +34,12 @@ class PartnerController extends Controller
 
         Partners::create($validated);
 
-        return redirect()->route('admin.partners.index')->with('success', 'Partner berhasil ditambahkan!');
+        return redirect()->route('organizer.partners.index')->with('success', 'Partner berhasil ditambahkan!');
     }
 
     public function edit(Partners $partner)
     {
-        return view('admin.partners.edit', compact('partner'));
+        return view('organizer.partners.edit', compact('partner'));
     }
 
     public function update(Request $request, Partners $partner)
@@ -51,12 +51,12 @@ class PartnerController extends Controller
 
         $partner->update($validated);
 
-        return redirect()->route('admin.partners.index')->with('success', 'Partner berhasil diperbarui!');
+        return redirect()->route('organizer.partners.index')->with('success', 'Partner berhasil diperbarui!');
     }
 
     public function destroy(Partners $partner)
     {
         $partner->delete();
-        return redirect()->route('admin.partners.index')->with('success', 'Partner berhasil dihapus!');
+        return redirect()->route('organizer.partners.index')->with('success', 'Partner berhasil dihapus!');
     }
 }

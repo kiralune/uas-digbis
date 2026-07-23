@@ -1,5 +1,8 @@
 @extends('layouts.app')
 
+@section('hideNav', true)
+@section('hideFooter', true)
+
 @section('content')
 <main class="max-w-3xl mx-auto px-6 py-20">
         <div class="mb-12">
