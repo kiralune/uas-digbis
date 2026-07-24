@@ -45,7 +45,9 @@ class CertificateMail extends Mailable
         $certificatePath = ltrim($this->certificatePath, '/');
 
         if (Storage::disk('public')->exists($certificatePath)) {
-            $this->attachFromStorageDisk('public', $certificatePath, 'e-certificate.pdf', [
+            $certificateData = Storage::disk('public')->get($certificatePath);
+
+            $this->attachData($certificateData, 'e-certificate.pdf', [
                 'mime' => 'application/pdf',
             ]);
         }

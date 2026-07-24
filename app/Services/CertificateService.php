@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Mail\CertificateMail;
 use App\Models\Transaction;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
@@ -51,13 +52,33 @@ class CertificateService
         }
 
         try {
+            Log::info('Sending certificate email', [
+                'transaction_id' => $transaction->id,
+                'email' => $transaction->customer_email,
+                'certificate_path' => $path,
+            ]);
+
             Mail::to($transaction->customer_email)->send(new CertificateMail($transaction, $path));
+
             $transaction->update([
                 'certificate_sent_at' => now(),
             ]);
 
+            Log::info('Certificate email sent', [
+                'transaction_id' => $transaction->id,
+                'email' => $transaction->customer_email,
+                'certificate_path' => $path,
+            ]);
+
             return true;
         } catch (\Throwable $e) {
+            Log::error('Failed to send certificate email', [
+                'transaction_id' => $transaction->id,
+                'email' => $transaction->customer_email,
+                'certificate_path' => $path,
+                'error' => $e->getMessage(),
+            ]);
+
             report($e);
             return false;
         }
