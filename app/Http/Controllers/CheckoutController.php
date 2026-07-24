@@ -108,12 +108,24 @@ class CheckoutController extends Controller
 
             public function success($order_id)
     {
+        Log::info('Checkout success entered', [
+            'order_id' => $order_id,
+        ]);
+
         // Mengambil daftar kategori untuk keperluan menu footer
         $categories = \App\Models\Category::all();
 
         $transaction = Transaction::with('event')->where('order_id', $order_id)->firstOrFail();
-                session(['ticket_email' => $transaction->customer_email]);
-                session(['ticket_order_id' => $transaction->order_id]);
+
+        Log::info('Checkout success transaction loaded', [
+            'transaction_id' => $transaction->id,
+            'status' => $transaction->status,
+            'event_price' => $transaction->event?->price,
+            'customer_email' => $transaction->customer_email,
+        ]);
+
+        session(['ticket_email' => $transaction->customer_email]);
+        session(['ticket_order_id' => $transaction->order_id]);
 
                 if ((int) $transaction->event->price === 0 && strtolower($transaction->status) === 'success') {
                     return view('checkout.success', compact('transaction', 'categories'));
@@ -144,10 +156,23 @@ class CheckoutController extends Controller
                             $transaction->event->save();
                             
                             try {
+                                Log::info('Sending ticket email from checkout bypass', [
+                                    'transaction_id' => $transaction->id,
+                                    'email' => $transaction->customer_email,
+                                ]);
+
                                 \Illuminate\Support\Facades\Mail::to($transaction->customer_email)
                                     ->send(new \App\Mail\EventTicketMail($transaction));
+
+                                Log::info('Ticket email sent from checkout bypass', [
+                                    'transaction_id' => $transaction->id,
+                                    'email' => $transaction->customer_email,
+                                ]);
                             } catch (\Exception $e) {
-                                \Log::error('Gagal mengirim email E-Ticket secara manual (Bypass): ' . $e->getMessage());
+                                Log::error('Gagal mengirim email E-Ticket secara manual (Bypass): ' . $e->getMessage(), [
+                                    'transaction_id' => $transaction->id,
+                                    'email' => $transaction->customer_email,
+                                ]);
                             }
                         }
                     }
@@ -174,10 +199,23 @@ class CheckoutController extends Controller
             $transaction->update(['status' => 'success']);
 
             try {
+                Log::info('Sending ticket email for free transaction', [
+                    'transaction_id' => $transaction->id,
+                    'email' => $transaction->customer_email,
+                ]);
+
                 Mail::to($transaction->customer_email)
                     ->send(new \App\Mail\EventTicketMail($transaction));
+
+                Log::info('Ticket email sent for free transaction', [
+                    'transaction_id' => $transaction->id,
+                    'email' => $transaction->customer_email,
+                ]);
             } catch (\Exception $e) {
-                Log::error('Gagal mengirim email E-Ticket free event: ' . $e->getMessage());
+                Log::error('Gagal mengirim email E-Ticket free event: ' . $e->getMessage(), [
+                    'transaction_id' => $transaction->id,
+                    'email' => $transaction->customer_email,
+                ]);
             }
         });
     }
