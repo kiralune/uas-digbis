@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Organizer;
 
 use App\Http\Controllers\Controller;
 use App\Models\Transaction;
+use App\Services\CertificateService;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
@@ -21,7 +23,6 @@ class TransactionController extends Controller
             abort(403, 'Akun organizer belum terhubung ke organisasi.');
         }
 
-        // Mengambil transaksi terbaru dengan pembatasan 20 baris/halaman
         $query = Transaction::with('event');
 
         if ($user?->role === 'organizer') {
@@ -30,5 +31,16 @@ class TransactionController extends Controller
 
         $transactions = $query->latest()->paginate(20);
         return view('organizer.transactions.index', compact('transactions'));
+    }
+
+    public function markAttendance(Transaction $transaction, CertificateService $service): RedirectResponse
+    {
+        if (Auth::user()?->role !== 'organizer') {
+            abort(403);
+        }
+
+        $service->markAttendance($transaction);
+
+        return redirect()->back()->with('success', 'Kehadiran berhasil divalidasi dan e-certificate diproses.');
     }
 }

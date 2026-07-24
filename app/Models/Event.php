@@ -12,12 +12,27 @@ class Event extends Model
 {
     protected $fillable = [
         'category_id', 'partner_id', 'organization_id', 'title', 'description', 'date',
-        'location', 'price', 'stock', 'poster_path'
+        'location', 'price', 'stock', 'poster_path', 'certificate_enabled', 'certificate_template'
         ];
 
     protected $casts = [
         'date' => 'datetime',
     ];
+
+    protected $appends = ['poster_url'];
+
+    public function getPosterUrlAttribute(): string
+    {
+        if (! $this->poster_path) {
+            return 'https://placehold.co/120x160?text=No+Image';
+        }
+
+        if (str_starts_with($this->poster_path, 'http')) {
+            return $this->poster_path;
+        }
+
+        return asset('storage/' . ltrim($this->poster_path, '/'));
+    }
 
     public function category(): BelongsTo
     {
@@ -39,5 +54,21 @@ class Event extends Model
         return $this->hasMany(Review::class);
     }
         
+
+    protected static function booted(): void
+    {
+        static::creating(function ($model) {
+            try {
+                if (empty($model->organization_id) && auth()->check()) {
+                    $orgId = auth()->user()->organization_id ?? null;
+                    if ($orgId) {
+                        $model->organization_id = $orgId;
+                    }
+                }
+            } catch (\Throwable $e) {
+                // don't break creation if auth not available in some contexts
+            }
+        });
+    }
 
 }

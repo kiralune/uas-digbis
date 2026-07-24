@@ -4,14 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Organization extends Model
 {
     protected $fillable = [
         'name',
         'slug',
+        'logo_url',
+        'description',
         'status',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public function users(): HasMany
     {
@@ -26,5 +34,10 @@ class Organization extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    public function reviews(): HasManyThrough
+    {
+        return $this->hasManyThrough(Review::class, Event::class, 'organization_id', 'event_id', 'id', 'id');
     }
 }

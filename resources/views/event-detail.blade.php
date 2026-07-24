@@ -12,23 +12,28 @@
                             : asset('storage/' . ltrim($event->poster_path, '/')))
                         : asset('assets/concert.png');
                 @endphp
-                <img src="{{ $posterUrl }}" alt="{{ $event->title }}" class="w-full rounded-[2.5rem] shadow-2xl border-8 border-white object-cover aspect-[3/4]">
+                <img src="{{ $posterUrl }}" alt="{{ $event->title }}" class="w-full max-w-xs mx-auto rounded-[2.5rem] shadow-2xl border-2 border-white object-cover aspect-[3/4]">
                 <div class="mt-8 p-6 bg-white rounded-3xl border border-slate-100 shadow-sm">
-                    <h4 class="font-bold mb-4">Penyelenggara</h4>
+                    <h4 class="font-bold mb-4">Organizer</h4>
                     <div class="flex items-center gap-4">
                         <div
                             class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
-                            {{ strtoupper(substr($event->partner->name ?? 'AB', 0, 2)) }}</div>
-                        <div>
-                            @if($event->partner)
-                                <a href="{{ route('organizers.show', $event->partner) }}" class="font-bold text-slate-800 hover:text-indigo-600 transition">{{ $event->partner->name }}</a>
-                                <p class="text-xs text-slate-500">Verified Organizer</p>
+                            {{ strtoupper(substr($event->organization->name ?? 'AB', 0, 2)) }}</div>
+                        <div class="flex-1">
+                            @if($event->organization)
+                                <span class="font-bold text-slate-800">{{ $event->organization->name }}</span>
+                                <p class="text-xs text-slate-500">Organizer Terdaftar</p>
                             @else
-                                <p class="font-bold text-slate-800">Penyelenggara belum ditentukan</p>
-                                <p class="text-xs text-slate-500">Data organizer akan tampil setelah event dikaitkan</p>
+                                <p class="font-bold text-slate-800">Organizer belum ditentukan</p>
+                                <p class="text-xs text-slate-500">Event ini belum memiliki organizer terdaftar.</p>
                             @endif
                         </div>
                     </div>
+                    @if($event->organization)
+                    <a href="{{ route('organizers.show', $event->organization) }}" class="mt-4 w-full inline-block text-center px-4 py-2 bg-indigo-50 text-indigo-600 font-semibold rounded-2xl hover:bg-indigo-100 transition">
+                        Lihat Profil Organizer
+                    </a>
+                    @endif
                 </div>
             </div>
         </div>

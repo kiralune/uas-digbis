@@ -3,14 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Event;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class EventController extends Controller
 {
-    function index(){
-    
+    public function index(Request $request)
+    {
+        $categories = Category::all();
+
+        $query = Event::with(['category', 'organization', 'partner'])
+            ->whereNotNull('organization_id')
+            ->whereHas('organization')
+            ->orderBy('date', 'asc');
+
+        if ($request->has('category') && $request->category != '') {
+            $query->whereHas('category', function ($q) use ($request) {
+                $q->where('slug', $request->category);
+            });
+        }
+
+        $events = $query->paginate(12)->withQueryString();
+
+        return view('events.index', compact('events', 'categories'));
     }
 
     public function show(\App\Models\Event $event)

@@ -2,15 +2,98 @@
 
 @section('content')
 <main class="max-w-7xl mx-auto px-6 py-12 space-y-10">
-    <section class="bg-gradient-to-br from-indigo-600 to-slate-900 text-white rounded-[2.5rem] p-8 md:p-12 shadow-2xl overflow-hidden relative">
-        <div class="absolute -right-20 -top-20 w-64 h-64 rounded-full bg-white/10 blur-2xl"></div>
-        <div class="absolute -left-20 -bottom-20 w-64 h-64 rounded-full bg-cyan-400/10 blur-2xl"></div>
-        <div class="relative max-w-3xl space-y-4">
-            <p class="text-xs font-black uppercase tracking-[0.3em] text-indigo-200">Tiket Saya</p>
-            <h1 class="text-4xl md:text-5xl font-black leading-tight">Semua tiket dan transaksi tampil di halaman ini.</h1>
-            <p class="text-indigo-100 text-lg max-w-2xl">Tidak perlu cari email lagi. Setiap transaksi yang tersimpan akan muncul langsung, dan tombol rating tampil kalau event sudah lewat.</p>
+    @php
+    $successTransactions = $transactions->where('status', 'success')->count();
+    $activeTickets = $transactions->filter(function ($transaction) {
+        return $transaction->status === 'success'
+            && $transaction->event?->date
+            && now()->lt($transaction->event->date->copy()->addDay());
+    })->count();
+    $pendingTransactions = $transactions->where('status', '!=', 'success')->count();
+@endphp
+
+<section class="relative overflow-hidden rounded-[2rem] bg-slate-950 shadow-2xl">
+    <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(99,102,241,0.45),_transparent_35%),radial-gradient(circle_at_bottom_left,_rgba(6,182,212,0.20),_transparent_35%)]"></div>
+    <div class="absolute -right-16 top-10 h-64 w-64 rounded-full border border-white/10"></div>
+    <div class="absolute -right-4 top-20 h-40 w-40 rounded-full border border-white/10"></div>
+
+    <div class="relative grid gap-8 p-7 md:p-10 lg:grid-cols-[1fr_auto] lg:items-center">
+        <div class="max-w-2xl">
+            <div class="inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-400/10 px-3 py-1.5 text-xs font-bold text-indigo-200">
+                <span class="flex h-2 w-2 rounded-full bg-emerald-400"></span>
+                Pusat tiket pribadi
+            </div>
+
+            <h1 class="mt-5 text-3xl font-black leading-tight text-white md:text-5xl">
+                Semua pengalaman event-mu, dalam satu tempat.
+            </h1>
+
+            <p class="mt-4 max-w-xl text-sm leading-relaxed text-slate-300 md:text-base">
+                Cek status transaksi, lihat detail tiket, dan berikan ulasan setelah event selesai.
+            </p>
+
+            <div class="mt-7 flex flex-wrap gap-3">
+                <div class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur-sm">
+                    <p class="text-2xl font-black text-white">{{ $transactions->count() }}</p>
+                    <p class="mt-0.5 text-xs font-medium text-slate-300">Total transaksi</p>
+                </div>
+
+                <div class="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 backdrop-blur-sm">
+                    <p class="text-2xl font-black text-emerald-300">{{ $activeTickets }}</p>
+                    <p class="mt-0.5 text-xs font-medium text-emerald-100">Tiket aktif</p>
+                </div>
+
+                @if($pendingTransactions > 0)
+                    <div class="rounded-2xl border border-amber-400/20 bg-amber-400/10 px-4 py-3 backdrop-blur-sm">
+                        <p class="text-2xl font-black text-amber-300">{{ $pendingTransactions }}</p>
+                        <p class="mt-0.5 text-xs font-medium text-amber-100">Menunggu pembayaran</p>
+                    </div>
+                @endif
+
+                @php
+                    $expiredTickets = $transactions->filter(function ($transaction) {
+                        return $transaction->status === 'success'
+                            && $transaction->event?->date
+                            && now()->gte($transaction->event->date->copy()->addDay());
+                    })->count();
+                @endphp
+
+                @if($expiredTickets > 0)
+                    <div class="rounded-2xl border border-slate-400/20 bg-slate-100/80 px-4 py-3 backdrop-blur-sm">
+                        <p class="text-2xl font-black text-slate-700">{{ $expiredTickets }}</p>
+                        <p class="mt-0.5 text-xs font-medium text-slate-500">Tiket tidak aktif</p>
+                    </div>
+                @endif
+            </div>
         </div>
-    </section>
+
+        <div class="hidden lg:block">
+            <div class="relative w-72 rotate-3 rounded-[2rem] border border-white/15 bg-white/10 p-5 shadow-2xl backdrop-blur-md">
+                <div class="flex items-center justify-between">
+                    <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-indigo-500 text-white">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 4H8a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V6a2 2 0 00-2-2zM9 9h6m-6 4h6m-6 4h3" />
+                        </svg>
+                    </div>
+
+                    <span class="rounded-full bg-emerald-400/20 px-3 py-1 text-xs font-bold text-emerald-300">
+                        Tersimpan aman
+                    </span>
+                </div>
+
+                <p class="mt-8 text-xs font-bold uppercase tracking-[0.25em] text-indigo-200">
+                    AmikomEventHub
+                </p>
+                <p class="mt-2 text-2xl font-black text-white">E-Ticket</p>
+
+                <div class="mt-8 border-t border-white/10 pt-4 text-sm text-slate-300">
+                    Detail event dan transaksi tersedia kapan saja.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
     <section class="space-y-6">
         @if($transactions->isEmpty())
@@ -83,8 +166,17 @@
                                     </div>
 
                                     <div class="flex flex-wrap gap-3">
-                                        @if($transaction->status === 'success')
+                                        @php
+                                            $ticketExpired = $transaction->status === 'success'
+                                                && $transaction->event?->date
+                                                && now()->gte($transaction->event->date->copy()->addDay());
+                                            $ticketActive = $transaction->status === 'success' && ! $ticketExpired;
+                                        @endphp
+
+                                        @if($ticketActive)
                                             <span class="px-4 py-2 rounded-2xl bg-emerald-100 text-emerald-700 font-bold">Tiket aktif</span>
+                                        @elseif($ticketExpired)
+                                            <span class="px-4 py-2 rounded-2xl bg-slate-100 text-slate-600 font-bold">Tiket tidak aktif</span>
                                         @else
                                             <span class="px-4 py-2 rounded-2xl bg-amber-100 text-amber-700 font-bold">Menunggu pembayaran</span>
                                         @endif

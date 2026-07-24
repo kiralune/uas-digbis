@@ -9,15 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class ReviewController extends Controller
 {
-    public function index()
-    {
-        $reviews = Review::with(['event.partner', 'transaction'])
-            ->where('customer_email', Auth::user()->email)
-            ->latest()
-            ->get();
-
-        return view('reviews.index', compact('reviews'));
-    }
     private function authorizeReviewWindow(Transaction $transaction): void
     {
         $transaction->loadMissing('event.partner', 'review');
@@ -52,7 +43,11 @@ class ReviewController extends Controller
         $this->authorizeReviewWindow($transaction);
 
         if ($transaction->review) {
-            return redirect()->route('organizers.show', $transaction->event->partner)->with('info', 'Review untuk transaksi ini sudah dikirim.');
+            if ($transaction->event->organization) {
+                return redirect()->route('organizers.show', $transaction->event->organization)->with('info', 'Review untuk transaksi ini sudah dikirim.');
+            }
+
+            return redirect()->route('events.show', $transaction->event)->with('info', 'Review untuk transaksi ini sudah dikirim.');
         }
 
         $data = $request->validate([
@@ -71,7 +66,7 @@ class ReviewController extends Controller
             'submitted_at' => now(),
         ]);
 
-        return redirect()->route('organizers.show', $transaction->event->partner)->with('success', 'Terima kasih, ulasan Anda sudah disimpan.');
+        return redirect()->route('ticket')->with('success', 'Terima kasih, ulasan Anda sudah disimpan.');
     }
 
     public function update(Request $request, Transaction $transaction)
@@ -91,6 +86,6 @@ class ReviewController extends Controller
             'submitted_at' => now(),
         ]);
 
-        return redirect()->route('organizers.show', $transaction->event->partner)->with('success', 'Review berhasil diperbarui.');
+        return redirect()->route('ticket')->with('success', 'Review berhasil diperbarui.');
     }
 }

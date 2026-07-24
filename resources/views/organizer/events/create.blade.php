@@ -25,16 +25,6 @@
             @error('category_id') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
         </div>
 
-        <div>
-            <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Penyelenggara</label>
-            <select name="partner_id" class="w-full px-5 py-4 bg-slate-50 border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium" required>
-                <option value="">Pilih Penyelenggara</option>
-                @foreach($partners as $partner)
-                    <option value="{{ $partner->id }}" {{ old('partner_id') == $partner->id ? 'selected' : '' }}>{{ $partner->name }}</option>
-                @endforeach
-            </select>
-            @error('partner_id') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
-        </div>
 
         <div>
             <label class="block text-sm font-bold text-slate-700 mb-2 uppercase tracking-wide">Deskripsi</label>
@@ -71,6 +61,14 @@
         <div class="mb-6">
             <label class="block mb-2 font-medium text-gray-700">Poster Event (Opsional)</label>
             <input type="file" name="poster" accept="image/*" class="w-full border border-gray-300 p-2.5 rounded">
+        </div>
+
+        <div class="mb-6 rounded-2xl border border-indigo-100 bg-indigo-50 p-4">
+            <label class="flex items-center gap-3 text-sm font-bold text-slate-700 uppercase tracking-wide">
+                <input type="checkbox" name="certificate_enabled" value="1" class="h-4 w-4 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500">
+                Aktifkan E-Certificate Otomatis untuk peserta
+            </label>
+            <p class="mt-2 text-sm text-slate-500">Saat peserta hadir dan event sudah berstatus sukses, sertifikat akan dibuat dan dikirim otomatis.</p>
         </div>
 
         <div class="pt-4 flex justify-end gap-4 border-t border-slate-100">

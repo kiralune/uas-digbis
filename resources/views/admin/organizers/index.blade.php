@@ -31,13 +31,13 @@
                         </td>
                         <td class="py-3 pr-4">{{ $organization->events_count }}</td>
                         <td class="py-3 pr-4 flex flex-wrap gap-2">
-                            <a href="{{ route('admin.organizers.show', $organization->id) }}" class="rounded-xl bg-slate-100 px-3 py-2 font-semibold text-slate-700 hover:bg-slate-200">Detail</a>
-                            <form action="{{ route('admin.organizers.verify', $organization->id) }}" method="POST" class="inline">
+                            <a href="{{ route('admin.organizers.show', $organization) }}" class="rounded-xl bg-slate-100 px-3 py-2 font-semibold text-slate-700 hover:bg-slate-200">Detail</a>
+                            <form action="{{ route('admin.organizers.verify', $organization) }}" method="POST" class="inline">
                                 @csrf
                                 <input type="hidden" name="status" value="active">
                                 <button type="submit" class="rounded-xl bg-emerald-600 px-3 py-2 font-semibold text-white hover:bg-emerald-700">Verifikasi</button>
                             </form>
-                            <form action="{{ route('admin.organizers.verify', $organization->id) }}" method="POST" class="inline">
+                            <form action="{{ route('admin.organizers.verify', $organization) }}" method="POST" class="inline">
                                 @csrf
                                 <input type="hidden" name="status" value="pending">
                                 <button type="submit" class="rounded-xl bg-amber-500 px-3 py-2 font-semibold text-white hover:bg-amber-600">Tunda</button>

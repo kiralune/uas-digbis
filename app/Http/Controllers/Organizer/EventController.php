@@ -59,14 +59,14 @@ class EventController extends Controller
         // Menerapkan validasi data request dari pengguna
         $rules = [
             'category_id' => 'required|exists:categories,id',
-            'partner_id' => 'required|exists:partners,id',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|numeric|min:1',
-            'poster' => 'nullable|image|max:2048' //Maksimal 2MB
+            'poster' => 'nullable|image|max:2048', //Maksimal 2MB
+            'certificate_enabled' => 'nullable|boolean'
         ];
 
         if ($user?->role === 'superadmin') {
@@ -74,6 +74,7 @@ class EventController extends Controller
         }
 
         $data = $request->validate($rules);
+        $data['certificate_enabled'] = $request->has('certificate_enabled');
 
          if ($request->hasFile('poster')) {
         // Simpan ke direktori storage/app/public/posters
@@ -116,15 +117,16 @@ class EventController extends Controller
 
         $data = $request->validate([
             'category_id' => 'required|exists:categories,id',
-            'partner_id' => 'required|exists:partners,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'date' => 'required|date',
             'location' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|numeric|min:1',
-            'poster' => 'nullable|image|max:2048' //Maksimal 2MB
+            'poster' => 'nullable|image|max:2048', //Maksimal 2MB
+            'certificate_enabled' => 'nullable|boolean'
         ]);
+        $data['certificate_enabled'] = $request->has('certificate_enabled');
     
         if ($request->hasFile('poster')) {
             // Hapus gambar lama jika sebelumnya sudah memiliki poster

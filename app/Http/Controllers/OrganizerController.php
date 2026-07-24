@@ -2,19 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Partners;
+use App\Models\Organization;
+use Illuminate\Support\Carbon;
 
 class OrganizerController extends Controller
 {
-    public function show(Partners $partner)
+    public function show(Organization $organizer)
     {
-        $partner->load(['events.category', 'reviews' => function ($query) {
-            $query->latest('submitted_at');
-        }]);
+        $organizer->load([
+            'events.category',
+            'reviews' => function ($query) {
+                $query->latest('submitted_at')->with(['event', 'transaction']);
+            },
+        ]);
 
-        $averageRating = round((float) $partner->reviews()->avg('rating'), 1);
-        $reviewCount = $partner->reviews()->count();
+        $eventCount = $organizer->events->count();
+        $reviewCount = $organizer->reviews->count();
+        $averageRating = $reviewCount ? round((float) $organizer->reviews->avg('rating'), 1) : 0;
+        $ticketsSold = $organizer->transactions()->count();
 
-        return view('organizers.show', compact('partner', 'averageRating', 'reviewCount'));
+        $upcomingEventsCount = $organizer->events->where('date', '>=', Carbon::now())->count();
+        $pastEventsCount = $organizer->events->where('date', '<', Carbon::now())->count();
+
+        return view(
+            'organizer.show',
+            compact(
+                'organizer',
+                'eventCount',
+                'reviewCount',
+                'averageRating',
+                'ticketsSold',
+                'upcomingEventsCount',
+                'pastEventsCount'
+            )
+        );
     }
 }

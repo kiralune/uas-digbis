@@ -60,6 +60,18 @@
             </div>
 
             <div id="panel-register" class="hidden space-y-5">
+                <a href="{{ url('/auth/google?redirect_to=' . route('home')) }}"
+                   class="w-full inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white py-4 text-slate-900 font-semibold hover:bg-slate-50 transition">
+                    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" class="w-5 h-5">
+                    Daftar dengan Google
+                </a>
+
+                <div class="flex items-center gap-4 py-1 text-sm font-medium text-slate-400">
+                    <span class="h-px flex-1 bg-slate-200"></span>
+                    <span>atau</span>
+                    <span class="h-px flex-1 bg-slate-200"></span>
+                </div>
+
                 <form action="{{ route('register.post') }}" method="POST" class="space-y-5 mt-2">
                     @csrf
                     <div>
@@ -75,6 +87,13 @@
                                class="w-full rounded-2xl border border-slate-200 px-5 py-4 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
                                required>
                         @error('email')<p class="mt-2 text-sm text-rose-500">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-2">No. WhatsApp</label>
+                        <input type="tel" name="phone" value="{{ old('phone') }}" placeholder="08xxxxxxx"
+                               class="w-full rounded-2xl border border-slate-200 px-5 py-4 text-slate-900 focus:border-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-100"
+                               required>
+                        @error('phone')<p class="mt-2 text-sm text-rose-500">{{ $message }}</p>@enderror
                     </div>
                     <div class="grid gap-5 md:grid-cols-2">
                         <div>

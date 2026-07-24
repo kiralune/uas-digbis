@@ -16,21 +16,15 @@ use App\Http\Controllers\AdminController;
 
 // Rute User Area
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/events', [HomeController::class, 'index'])->name('events.index');
+Route::get('/events', [EventController::class, 'index'])->name('events.index');
 Route::get('/events/{event}', [\App\Http\Controllers\EventController::class, 'show'])->name('events.show');
-Route::redirect('/admin', '/organizer');
-Route::redirect('/admin/dashboard', '/organizer/dashboard');
-Route::redirect('/admin/login', '/organizer/login');
-Route::redirect('/admin/register', '/organizer/register');
-Route::redirect('/admin/{any}', '/organizer/{any}')->where('any', '.*');
 Route::get('/checkout/{event}', [App\Http\Controllers\CheckoutController::class, 'create'])->name('checkout.create');
 Route::post('/checkout/{event}', [App\Http\Controllers\CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout', [EventController::class,'checkout'])->name('checkout');
 Route::middleware('auth')->group(function () {
     Route::get('/my-ticket', [EventController::class, 'ticket'])->name('ticket');
-    Route::get('/my-reviews', [ReviewController::class, 'index'])->name('reviews.index');
 });
-Route::get('/organizers/{partner}', [OrganizerController::class, 'show'])->name('organizers.show');
+Route::get('/organizers/{organizer}', [OrganizerController::class, 'show'])->name('organizers.show');
 Route::get('/review/{transaction:order_id}', [ReviewController::class, 'create'])->name('reviews.create');
 Route::post('/review/{transaction:order_id}', [ReviewController::class, 'store'])->name('reviews.store');
 Route::get('/review/{transaction:order_id}/edit', [ReviewController::class, 'edit'])->name('reviews.edit');
@@ -49,9 +43,8 @@ Route::get('/register/organizer', [PublicAuthController::class, 'showRegisterOrg
 Route::post('/register/organizer', [PublicAuthController::class, 'registerOrganizer'])->name('organizer_auth.register.post');
 
 Route::post('/logout', [PublicAuthController::class, 'logout'])->name('logout');
-Route::get('/profile', function () {
-    return view('profile');
-})->middleware('auth')->name('profile');
+Route::get('/profile', [\App\Http\Controllers\UserProfileController::class, 'show'])->middleware('auth')->name('profile');
+Route::patch('/profile', [\App\Http\Controllers\UserProfileController::class, 'update'])->middleware('auth')->name('profile.update');
 
 Route::get('/login/admin', [PublicAuthController::class, 'showLoginAdmin'])->name('admin_auth.login');
 Route::post('/login/admin', [PublicAuthController::class, 'loginAdmin'])->name('admin_auth.login.post');
@@ -92,8 +85,11 @@ Route::prefix('organizer')->name('organizer.')->group(function () {
     Route::middleware(['auth', 'organizer'])->group(function () {
         Route::get('/', [DashboardController::class, 'index'])->name('home');
         Route::get('dashboard', [OrganizerDashboardController::class, 'index'])->name('dashboard');
+        Route::get('profile/edit', [\App\Http\Controllers\Organizer\ProfileController::class, 'edit'])->name('profile.edit');
+        Route::put('profile', [\App\Http\Controllers\Organizer\ProfileController::class, 'update'])->name('profile.update');
         Route::resource('events', EventOrganizerController::class);
         Route::get('transactions', [\App\Http\Controllers\Organizer\TransactionController::class, 'index'])->name('transactions.index');
+        Route::post('transactions/{transaction}/mark-attendance', [\App\Http\Controllers\Organizer\TransactionController::class, 'markAttendance'])->name('transactions.mark-attendance');
     });
 });
 

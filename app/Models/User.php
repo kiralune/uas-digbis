@@ -15,6 +15,7 @@ use Illuminate\Notifications\Notifiable;
     'organization_id',
     'name',
     'email',
+    'phone',
     'password',
     'role',
     'provider',

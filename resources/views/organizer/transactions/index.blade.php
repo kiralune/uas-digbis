@@ -14,6 +14,7 @@
                      <th class="px-8 py-4">Event</th>
                      <th class="px-8 py-4">Tgl Transaksi</th>
                      <th class="px-8 py-4">Status</th>
+                     <th class="px-8 py-4">Kehadiran</th>
                      <th class="px-8 py-4 text-right">Total Tagihan</th>
                  </tr>
              </thead>
@@ -42,6 +43,18 @@
                              <span class="px-3 py-1 bg-orange-100 text-orange-700 rounded-lg text-xs font-bold uppercase ring-1 ring-orange-200">Pending</span>
                          @else
                              <span class="px-3 py-1 bg-rose-100 text-rose-700 rounded-lg text-xs font-bold uppercase ring-1 ring-rose-200">{{ $trx->status }}</span>
+                         @endif
+                     </td>
+                     <td class="px-8 py-6">
+                         @if($trx->attendance_status === 'attended')
+                             <span class="px-3 py-1 bg-green-100 text-green-700 rounded-lg text-xs font-bold uppercase ring-1 ring-green-200">Hadir</span>
+                         @else
+                             <form action="{{ route('organizer.transactions.mark-attendance', $trx) }}" method="POST" class="inline-block">
+                                 @csrf
+                                 <button type="submit" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-xs font-bold uppercase hover:bg-indigo-700 transition">
+                                     Validasi Kehadiran
+                                 </button>
+                             </form>
                          @endif
                      </td>
                      <td class="px-8 py-6 text-right font-black {{ $trx->status == 'pending' ? '' : 'text-slate-900' }}">

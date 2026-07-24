@@ -97,7 +97,7 @@
                              WhatsApp</label>
                          <input type="tel" name="customer_phone" placeholder="08xxxxxxx"
                              class="w-full px-5 py-4 bg-white border-2 border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-600 outline-none transition font-medium"
-                             required value="{{ old('customer_phone') }}">
+                             required value="{{ old('customer_phone', auth()->user()->phone ?? '') }}">
                      </div>
                  </div>
 
